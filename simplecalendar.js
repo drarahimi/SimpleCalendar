@@ -550,7 +550,7 @@ class SimpleCalendar {
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full no-print space-y-2 sm:space-y-0 sm:space-x-4">
             <!-- Title row -->
             <div class="sc-date-container w-full sm:w-auto sm:items-center sm:ml-2 flex flex-col" style="align-items:center;">
-                <span class="text-3xl font-bold text-gray-800 leading-tight">
+                <span class="text-3xl font-bold text-gray-800 leading-tight truncate">
                     ${viewTitle}
                 </span>
                 <span class="text-sm text-gray-600 truncate">
@@ -627,10 +627,13 @@ class SimpleCalendar {
     renderMultiDayView() {
         const dates = this.getDatesForView();
         const eventsByDay = this.getEventsForView(dates);
-
         // Auto-fit slot min/max to visible events
-        if (this.options.autoFitEvents)
+        if (this.options.autoFitEvents && this.searchEl.value.length === 0)
             this._autoFitSlotTimes(eventsByDay);
+        else {
+            this.slotMinMinutes = this._timeStringToMinutes(this.options.slotMinTime);
+            this.slotMaxMinutes = this._timeStringToMinutes(this.options.slotMaxTime);
+        }
 
         let columnHeaders = `<div class="grid sc-time-grid border-b border-gray-200 sticky top-0 bg-white z-20" style="grid-template-columns: 50px repeat(${dates.length}, minmax(0, 1fr));">`;
         columnHeaders += '<div class="col-span-1 border-r border-gray-100 p-2 text-sm text-center bg-gray-50">Time</div>';
