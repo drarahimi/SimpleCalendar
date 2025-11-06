@@ -1,0 +1,105 @@
+      .sc-hour-label {
+          grid-column: 1 / 2;
+          text-align: right;
+          padding-right: 0.5rem;
+          height: 60px;
+          /* Standard hour height */
+          margin-top: -0px;
+          /* Align label to the line */
+          z-index: 5;
+          /* Ensure time labels are above lines */
+          background-color: white;
+          /* Prevent line showing through number */
+      }
+
+      .sc-time-slot-line-hour {
+          /* The line position is controlled by inline style (top) and grid-column */
+          border-top: 1px solid #e5e7eb;
+          z-index: 3;
+          /* Must be below events and time labels */
+      }
+
+      .sc-time-slot-line-half-hour {
+          /* The line position is controlled by inline style (top) and grid-column */
+          border-top: 1px dashed #e5e7eb;
+          z-index: 3;
+          /* Must be below events and time labels */
+      }
+
+      .sc-now-slot-line {
+          height: 2px;
+          background: #ff0000;
+          opacity: 1;
+          box-shadow: 0 0 1px rgba(0, 0, 0, 0.8);
+          z-index: 20;
+      }
+
+      .sc-pdf-export-mode .sc-now-slot-line {
+          display: none;
+      }
+
+      .sc-now-slot-line-triangle {
+          text-shadow: 0 0 1px rgba(0, 0, 0, 0.8);
+          left: 35px;
+          color: red;
+          z-index: 50;
+      }
+
+      .sc-pdf-export-mode .sc-now-slot-line-triangle {
+          display: none;
+      }
+
+      #pdf-dropdown-menu.open {
+          opacity: 1;
+          transform: scale(1);
+          pointer-events: auto;
+      }
+
+      .sc-event-box {
+          position: absolute;
+          padding: 4px;
+          font-size: 0.75rem;
+          line-height: 1;
+          overflow: hidden;
+          border-radius: 0.5rem;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+          transition: all 0.1s ease;
+          z-index: 10;
+          text-align: left;
+      }
+
+      .sc-event-box:hover {
+          z-index: 20;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+          border: solid;
+      }
+
+      /* --- PDF EXPORT MODE STYLES (Fixes Clipping and Scroll) --- */
+      .sc-pdf-export-mode .sc-main-grid-container {
+          height: auto !important;
+          /* Allow content to fully expand */
+          overflow: visible !important;
+          /* min-height: 2000px; */
+          /* Ensure sufficient space */
+          padding-bottom: 2rem;
+      }
+
+      /* FIX: Add top padding to the captured area to prevent the header from being clipped */
+      .sc-pdf-export-mode #sc-calendar-view {
+          padding-top: 50px !important;
+      }
+
+      .sc-pdf-export-mode .sc-event-box {
+          box-shadow: none;
+          /* Cleaner look for print */
+          border: 1px solid rgba(0, 0, 0, 0.2);
+      }
+
+      .sc-pdf-export-mode .sc-time-slot-line {
+          border-color: #cccccc;
+      }
+
+      /* Temporarily make headers static so they are captured correctly */
+      .sc-pdf-export-mode .sticky {
+          position: static !important;
+      }

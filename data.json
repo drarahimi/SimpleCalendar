@@ -1,0 +1,1113 @@
+{
+    "conference": {
+        "acronym": "ICPHM",
+        "year": "2026",
+        "id": "69567x",
+        "submitLink": "",
+        "registerLink": "",
+        "programLink": "",
+        "title": "IEEE International Conference on Prognostics and Health Management",
+        "tagline": "Enhancing Safety, Efficiency, Availability, and Effectiveness of Systems through PHM Technology and Application",
+        "location": "Toronto, ON",
+        "timezone":"America/Toronto",
+        "importantDates": [
+            {
+                "id": "cfp-opens",
+                "label": "Call for Papers opens",
+                "date": "September 29, 2025",
+                "passedMessage": "Open",
+                "passedColor": "green"
+            },
+            {
+                "id": "draft-full-due",
+                "label": "Draft Full Paper due",
+                "date": "February 2, 2026"
+            },
+            {
+                "id": "notification-of-acceptance",
+                "label": "Notification of Acceptance out",
+                "date": "April 3, 2026",
+                "passedMessage": "Out",
+                "passedColor": "green"
+            },
+            {
+                "id": "registration-opens",
+                "label": "Author Registration opens",
+                "date": "April 15, 2026",
+                "passedMessage": "Open",
+                "passedColor": "green"
+            },
+            {
+                "id": "final-manuscript-due",
+                "label": "Final Manuscript due",
+                "date": "April 15, 2026"
+            },
+            {
+                "id": "registration-early-due",
+                "label": "Early Registration due",
+                "date": "May 11, 2026"
+            },
+            {
+                "id": "conference-start",
+                "label": "Conference starts",
+                "date": "June 1, 2026",
+                "passedMessage": "Ongoing",
+                "passedColor": "green"
+            },
+            {
+                "id": "conference-ends",
+                "label": "Conference ends",
+                "date": "June 3, 2026",
+                "passedMessage": "Concluded",
+                "passedColor": "green"
+            }
+        ]
+    },
+    "venue": {
+        "name": "Toronto Metropolitan University (TMU), George Vari Engineering and Computing Centre, ENG",
+        "description": "Toronto Metropolitan University (TMU), formerly Ryerson University until 2022, is a public research university in downtown Toronto, Ontario. It was founded in 1948 as the Ryerson Institute of Technology and has expanded into a full university offering a broad range of undergraduate, graduate, and professional programs. With more than 44,000 undergraduates and several thousand graduate students, TMU serves a diverse, urban student body.",
+        "address": "245 Church St, Toronto, ON M5B 2R2",
+        "images": [
+            {
+                "url": "https://www.torontomu.ca/content/dam/brand/global/images/visual-guide/tmu-logo-full-colour.jpg",
+                "caption": "TMU Website",
+                "link": "https://www.torontomu.ca/"
+            },
+            {
+                "url": "/assets/venue/campus-map.png",
+                "caption": "Campus Map",
+                "link": "https://www.torontomu.ca/maps/"
+            },
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/0/06/George_Vari_Engineering_and_Computing_Centre_2022.jpg",
+                "caption": "George Vari Engineering and Computing Centre",
+                "link": "https://en.wikipedia.org/wiki/George_Vari_Engineering_and_Computing_Centre"
+            }
+        ],
+        "attractions": [
+            {
+                "name": "CN Tower",
+                "image": "https://images.unsplash.com/photo-1496938884040-e0456a8512ca?q=80&w=1168&auto=format&fit=crop&ixlib=rb-4.1.0",
+                "link": "https://www.cntower.ca/",
+                "description": "One of Toronto’s most famous landmarks with panoramic views of the city."
+            },
+            {
+                "name": "Royal Ontario Museum",
+                "image": "https://images.unsplash.com/photo-1696246234599-09aa237e1938?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0",
+                "link": "https://www.rom.on.ca/",
+                "description": "Canada’s largest museum of world cultures and natural history."
+            },
+            {
+                "name": "Toronto Islands",
+                "image": "https://images.unsplash.com/photo-1756172343760-48814dbc0382?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0",
+                "link": "https://www.toronto.ca/explore-enjoy/parks-gardens-beaches/toronto-islands/",
+                "description": "Beautiful islands just a short ferry ride from downtown Toronto."
+            },
+            {
+                "name": "Art Gallery of Ontario",
+                "image": "https://images.unsplash.com/photo-1568151976576-fbac3729efd4?q=80&w=1224&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "link": "https://ago.ca/",
+                "description": "One of the largest art museums in North America, with over 90,000 works."
+            },
+            {
+                "name": "Casa Loma",
+                "image": "https://images.unsplash.com/photo-1625616257448-fb5a25943809?q=80&w=1050&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "link": "https://casaloma.ca/",
+                "description": "A historic castle offering tours, gardens, and stunning city views."
+            },
+            {
+                "name": "St. Lawrence Market",
+                "image": "https://images.unsplash.com/photo-1488331531757-77fd056ebe43?q=80&w=1224&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "link": "https://www.stlawrencemarket.com/",
+                "description": "A historic public market with fresh produce, specialty foods, and artisans."
+            },
+            {
+                "name": "Ripley's Aquarium of Canada",
+                "image": "https://images.unsplash.com/photo-1733161213179-e7652fbaae67?q=80&w=1175&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "link": "https://www.ripleyaquariums.com/canada/",
+                "description": "An underwater adventure featuring sharks, jellyfish, and marine life exhibits."
+            },
+            {
+                "name": "Distillery District",
+                "image": "https://images.unsplash.com/photo-1579198096038-58bb3a8fc556?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "link": "https://www.thedistillerydistrict.com/",
+                "description": "A historic neighborhood with cobblestone streets, galleries, shops, and dining."
+            },
+            {
+                "name": "High Park",
+                "image": "https://images.unsplash.com/photo-1683572940352-1696660c4911?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "link": "https://www.toronto.ca/explore-enjoy/parks-gardens-beaches/high-park/",
+                "description": "Toronto’s largest public park, known for trails, gardens, and cherry blossoms."
+            },
+            {
+                "name": "Hockey Hall of Fame",
+                "image": "https://images.unsplash.com/photo-1701361172842-b132f9b09948?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "link": "https://www.hhof.com/",
+                "description": "A shrine to Canada's favorite sport with exhibits, trophies, and memorabilia."
+            }
+        ],
+        "links": [
+            {
+                "label": "Tourism Toronto",
+                "url": "https://www.destinationtoronto.com/"
+            },
+            {
+                "label": "Tourism Toronto Itinerary Inspirations",
+                "url": "https://www.destinationtoronto.com/travel-trade"
+            },
+            {
+                "label": "City of Toronto Visitor Info",
+                "url": "https://www.toronto.ca/explore-enjoy/visitor-information/"
+            },
+            {
+                "label": "Public Transit (TTC)",
+                "url": "https://www.ttc.ca/"
+            }
+        ]
+    },
+    "hotel": {
+        "information": "Potential accommodations near Toronto Metropolitan University",
+        "options": [
+            {
+                "name": "Chelsea Hotel Toronto",
+                "image": "https://images.unsplash.com/photo-1652199421215-cdeeb0bb9fe7?q=80&w=1141&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "link": "https://www.chelseatoronto.com/",
+                "description": "Located just a 5-minute walk from TMU, offering modern rooms, multiple dining options, and Canada’s largest hotel indoor pool."
+            },
+            {
+                "name": "Marriott Downtown at CF Toronto Eaton Centre",
+                "image": "https://images.unsplash.com/photo-1607124010642-a7449ead2192?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "link": "https://www.marriott.com/en-us/hotels/yyzec-marriott-downtown-at-cf-toronto-eaton-centre/overview/",
+                "description": "Modern hotel connected to Toronto Eaton Centre with excellent amenities and walkable distance to TMU."
+            }
+        ],
+        "usefulLinks": [
+            {
+                "label": "Places to Stay",
+                "url": "https://www.destinationtoronto.com/places-to-stay/",
+                "description": "A guide to find accomodations in Toronto using various filters and settings."
+            },
+            {
+                "label": "Toronto Transit (TTC)",
+                "url": "https://www.ttc.ca/",
+                "description": "Official site for public transit, including subway, streetcar, and bus schedules."
+            },
+            {
+                "label": "Downtown Toronto Restaurants",
+                "url": "https://www.blogto.com/restaurants/",
+                "description": "Comprehensive guide to the best restaurants, cafes, and eateries in Toronto."
+            },
+            {
+                "label": "Toronto Visitor Guide",
+                "url": "https://www.destinationtoronto.com/",
+                "description": "Official tourism website with attractions, events, and neighborhood guides."
+            }
+        ]
+    },
+    "committee": [
+        {
+            "name": "Christian Hansen",
+            "role": "General Chair",
+            "affiliation": "Eastern Washington University",
+            "location": "Spokane, WA, USA",
+            "email": "chansen@ewu.edu",
+            "image_url": "assets/committee/ai2/hansen.webp"
+        },
+        {
+            "name": "Ruolin Zhou",
+            "role": "Program Chair",
+            "affiliation": "UMass Dartmouth",
+            "location": "Dartmouth, MA, USA",
+            "email": "ruolin.zhou@umassd.edu",
+            "image_url": "assets/committee/ai2/zhou.webp"
+        },
+        {
+            "name": "Yiming Deng",
+            "role": "Program Vice Chair",
+            "affiliation": "Michigan State University",
+            "location": "East Lansing, MI",
+            "email": "dengyimi@egr.msu.edu",
+            "image_url": "assets/committee/ai2/deng.webp"
+        },
+        {
+            "name": "Janet Lin",
+            "role": "Paper Review Chair",
+            "affiliation": "Lulea University of Technology",
+            "location": "Lulea, Sweden",
+            "email": "janet.lin@ltu.se",
+            "image_url": "assets/committee/ai2/lin.webp"
+        },
+        {
+            "name": "Liangwei Zhang",
+            "role": "Paper Review Vice Chair",
+            "affiliation": "Dongguan University of Technology",
+            "location": "Dongguan, China",
+            "email": "liangwei.zhang@dgut.edu.cn",
+            "image_url": "assets/committee/ai2/zhang.png"
+        },
+        {
+            "name": "Trevor Craney",
+            "role": "Treasurer",
+            "affiliation": "Collins Aerospace",
+            "location": "Fulshear, Texas, United States",
+            "email": "trevor.craney@collins.com",
+            "image_url": "assets/committee/ai2/craney.png"
+        },
+        {
+            "name": "Rocco Cassandro",
+            "role": "Registration Chair",
+            "affiliation": "Western New England University",
+            "location": "Springfield, MA, USA",
+            "email": "rocco.cassandro@wne.edu",
+            "image_url": "assets/committee/ai2/cassandro.webp"
+        },
+        {
+            "name": "Farnoosh Naderkhani",
+            "role": "Local Arrangements Chair",
+            "affiliation": "Concordia University",
+            "location": "Montreal, QC, Canada",
+            "email": "farnoosh.naderkhani@concordia.ca",
+            "image_url": "assets/committee/ai2/naderkhani.webp"
+        },
+        {
+            "name": "Jason Rupe",
+            "role": "Proceedings Chair",
+            "affiliation": "CableLabs",
+            "location": "Louisville, CO, USA",
+            "email": "jrupe@ieee.org",
+            "image_url": "assets/committee/ai2/rupe.webp"
+        },
+        {
+            "name": "Lou Gullo",
+            "role": "Sponsorship Chair",
+            "affiliation": "Self/IEEE",
+            "location": "Spring Hill, FL, USA",
+            "email": "lougullo@comcast.net",
+            "image_url": "assets/committee/ai2/gullo.webp"
+        },
+        {
+            "name": "Guanyu Piao",
+            "role": "Publicity Chair",
+            "affiliation": "Shanghai University",
+            "location": "Shanghai, China",
+            "email": "piaoguanyu@shu.edu.cn",
+            "image_url": "assets/committee/ai2/piao.webp"
+        },
+        {
+            "name": "Steven Li",
+            "role": "Tutorials/Keynotes Chair",
+            "affiliation": "Western New England University",
+            "location": "Springfield, MA, USA",
+            "email": "zhaojun.li@wne.edu",
+            "image_url": "assets/committee/ai2/li.webp"
+        },
+        {
+            "name": "Afshin Rahimi",
+            "role": "Webmaster",
+            "affiliation": "University of Windsor",
+            "location": "Windsor, ON, Canada",
+            "email": "arahimi@uwindsor.ca",
+            "image_url": "assets/committee/ai2/rahimi.webp"
+        }
+    ],
+    "navigation": {
+        "pages": {
+            "index.html": {
+                "path": "home.html",
+                "label": "Home",
+                "icon": "fa-house"
+            },
+            "home": {
+                "path": "home.html",
+                "label": "Home",
+                "icon": "fa-house"
+            },
+            "about": {
+                "path": "about.html",
+                "label": "About",
+                "icon": "fa-question"
+            },
+            "call-for-papers": {
+                "path": "call-for-papers.html",
+                "label": "CFP",
+                "icon": "fa-bullhorn"
+            },
+            "registration": {
+                "path": "registration.html",
+                "label": "Registration",
+                "icon": "fa-file-signature"
+            },
+            "program": {
+                "path": "program.html",
+                "label": "Program",
+                "icon": "fa-table-list"
+            },
+            "sponsors": {
+                "path": "sponsors.html",
+                "label": "Sponsors",
+                "icon": "fa-handshake"
+            },
+            "author-resources": {
+                "path": "author-resources.html",
+                "label": "Author Resources",
+                "icon": "fa-toolbox"
+            },
+            "phm-publication": {
+                "path": "phm-publication.html",
+                "label": "Proceedings",
+                "icon": "fa-newspaper"
+            },
+            "reliability-society": {
+                "path": "reliability-society.html",
+                "label": "The Reliability Society",
+                "icon": "fa-landmark"
+            },
+            "committee": {
+                "path": "committee.html",
+                "label": "Committee",
+                "icon": "fa-users"
+            },
+            "venue": {
+                "path": "venue.html",
+                "label": "Conference Venue",
+                "icon": "fa-archway"
+            },
+            "hotel-info": {
+                "path": "hotel-info.html",
+                "label": "Hotel Information",
+                "icon": "fa-hotel"
+            }
+        },
+        "menu": [
+            {
+                "page": "home"
+            },
+            {
+                "page": "call-for-papers"
+            },
+            {
+                "page": "program"
+            },
+            {
+                "label": "Resources",
+                "submenu": [
+                    "author-resources",
+                    "registration",
+                    "venue",
+                    "hotel-info",
+                    "phm-publication"
+                ]
+            },
+            {
+                "label": "About",
+                "submenu": [
+                    "reliability-society",
+                    "committee",
+                    "sponsors"
+                ]
+            }
+        ],
+        "footer": {
+            "Conference": [
+                "call-for-papers",
+                "registration",
+                "program"
+            ],
+            "Resources": [
+                "author-resources",
+                "phm-publication",
+                "venue",
+                "hotel-info"
+            ],
+            "About": [
+                "reliability-society",
+                "committee"
+            ],
+            "Connect": [
+                {
+                    "label": "LinkedIn",
+                    "external": "https://www.linkedin.com/groups/14010895/",
+                    "icon": "fa-brands fa-linkedin"
+                },
+                {
+                    "label": "Visits",
+                    "external": "https://info.flagcounter.com/Ge0k",
+                    "icon": "fa-solid fa-globe"
+                }
+            ]
+        }
+    },
+    "proceedings": [
+        {
+            "year": "2025",
+            "location": "Denver, CO, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/11062024/proceeding"
+        },
+        {
+            "year": "2024",
+            "location": "Spokane, WA, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/10625768/proceeding"
+        },
+        {
+            "year": "2023",
+            "location": "Montreal, QC, Canada",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/10193873/proceeding"
+        },
+        {
+            "year": "2022",
+            "location": "Detroit (Romulus), MI, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/9815455/proceeding"
+        },
+        {
+            "year": "2021",
+            "location": "Detroit (Romulus), MI, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/9486427/proceeding"
+        },
+        {
+            "year": "2020",
+            "location": "Detroit, MI, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/9184066/proceeding"
+        },
+        {
+            "year": "2019",
+            "location": "San Francisco, CA, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/8809669/proceeding"
+        },
+        {
+            "year": "2018",
+            "location": "Seattle, WA, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/8437943/proceeding"
+        },
+        {
+            "year": "2017",
+            "location": "Dallas, TX, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/7990620/proceeding"
+        },
+        {
+            "year": "2016",
+            "location": "Ottawa, ON, Canada",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/7530388/proceeding"
+        },
+        {
+            "year": "2015",
+            "location": "Austin, TX, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/7222493/proceeding"
+        },
+        {
+            "year": "2014",
+            "location": "Cheney, WA, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/7024993/proceeding"
+        },
+        {
+            "year": "2013",
+            "location": "Gaithersburg, MD, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/6604420/proceeding"
+        },
+        {
+            "year": "2012",
+            "location": "Denver, CO, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/6294524/proceeding"
+        },
+        {
+            "year": "2011",
+            "location": "Denver, CO, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/6016185/proceeding"
+        },
+        {
+            "year": "2008",
+            "location": "Denver, CO, USA",
+            "url": "https://ieeexplore.ieee.org/xpl/conhome/4694772/proceeding"
+        }
+    ],
+    "program": {
+        "programSheetUrl":"https://docs.google.com/spreadsheets/d/1VHFq9ALC5xI0H1E4uRyVNzdTeMsIvRE6ygLpjDBdeb8/export?format=csv&gid=0",
+        "typeColorsSheetUrl":"https://docs.google.com/spreadsheets/d/1VHFq9ALC5xI0H1E4uRyVNzdTeMsIvRE6ygLpjDBdeb8/export?format=csv&gid=373486508",
+        "sessions": [
+            {
+                "type": "keynote",
+                "title": "",
+                "speaker": "Dr. X",
+                "bio": "Accomplished scholar",
+                "abstract": "Discussing DPHM and PHM with focus on ICPHM",
+                "image_url": "assets/committee/ai2/rahimi.jpg"
+            },
+            {
+                "type": "distinguished_speaker",
+                "title": "",
+                "speaker": "",
+                "bio": "",
+                "abstract": "",
+                "image_url": "assets/program/placeholder.png"
+            },
+            {
+                "type": "tutorial",
+                "title": "",
+                "speakers": [
+                    "Dr. X",
+                    "Dr. Y"
+                ],
+                "bio": "",
+                "abstract": "",
+                "image_url": "assets/program/placeholder.png"
+            },
+            {
+                "type": "tutorial",
+                "title": "",
+                "speakers": [
+                    "",
+                    ""
+                ],
+                "bio": "",
+                "abstract": "",
+                "image_url": "assets/program/placeholder.png"
+            },
+            {
+                "type": "panel",
+                "title": "",
+                "moderator": "TBD",
+                "panelists": [
+                    "Experts from IEEE, NIST, and industry"
+                ],
+                "abstract": "Panel discussion on ongoing and emerging standards in PHM...",
+                "image_url": "assets/program/placeholder.png"
+            },
+            {
+                "type": "workshop",
+                "title": "",
+                "speakers": [
+                    "PHM Data Challenge Committee"
+                ],
+                "abstract": "Hands-on workshop focusing on the PHM Data Challenge problem for 2025...",
+                "image_url": "assets/program/placeholder.png"
+            }
+        ],
+        "typeColors": {
+            "keynote": "#007bff",
+            "session": "#28a745",
+            "ethics": "#ffc107",
+            "social": "#6c757d",
+            "panel": "#6610f2",
+            "posters": "#17a2b8",
+            "workshop": "#20c997",
+            "sustainability": "#e83e8c",
+            "security": "#fd7e14",
+            "tutorials": "#198754",
+            "aerospace": "#28a745",
+            "energy": "#dc3545",
+            "closing": "#6610f2"
+        },
+        "events": [
+            {
+                "title": "Opening Keynote: The Future of Intelligent Systems",
+                "start": "2026-06-01T09:00:00",
+                "end": "2026-06-01T10:00:00",
+                "extendedProps": {
+                    "location": "Room A1",
+                    "speaker": "Dr. Sarah Liu",
+                    "track": "Keynote",
+                    "session": null,
+                    "moderator": null,
+                    "type": "keynote"
+                }
+            },
+            {
+                "title": "Session A: Robotics and Automation",
+                "start": "2026-06-01T10:15:00",
+                "end": "2026-06-01T11:30:00",
+                "extendedProps": {
+                    "location": "Room B2",
+                    "speaker": "Dr. Miguel Torres",
+                    "track": "Robotics",
+                    "session": "A",
+                    "moderator": "TBD",
+                    "type": "session"
+                }
+            },
+            {
+                "title": "Session B: AI Ethics and Policy",
+                "start": "2026-06-01T10:15:00",
+                "end": "2026-06-01T11:30:00",
+                "extendedProps": {
+                    "location": "Room C3",
+                    "speaker": "Prof. Elena Novak",
+                    "track": "Ethics",
+                    "session": "B",
+                    "moderator": "TBD",
+                    "type": "ethics"
+                }
+            },
+            {
+                "title": "Networking Lunch",
+                "start": "2026-06-01T12:00:00",
+                "end": "2026-06-01T13:00:00",
+                "extendedProps": {
+                    "location": "Main Hall",
+                    "track": "Social",
+                    "session": null,
+                    "moderator": null,
+                    "type": "social"
+                }
+            },
+            {
+                "title": "Panel Discussion: Human AI Collaboration",
+                "start": "2026-06-01T13:30:00",
+                "end": "2026-06-01T15:00:00",
+                "extendedProps": {
+                    "location": "Auditorium",
+                    "speaker": "Panel of 5",
+                    "track": "Panel",
+                    "session": null,
+                    "moderator": "TBD",
+                    "type": "panel"
+                }
+            },
+            {
+                "title": "Poster Session 1",
+                "start": "2026-06-01T15:15:00",
+                "end": "2026-06-01T17:00:00",
+                "extendedProps": {
+                    "location": "Exhibit Area",
+                    "track": "Posters",
+                    "session": 1,
+                    "moderator": null,
+                    "type": "posters"
+                }
+            },
+            {
+                "title": "Morning Workshop: Machine Learning with Edge Devices",
+                "start": "2026-06-02T09:00:00",
+                "end": "2026-06-02T11:00:00",
+                "extendedProps": {
+                    "location": "Room A1",
+                    "speaker": "Dr. Ken Ito",
+                    "track": "Workshop",
+                    "session": null,
+                    "moderator": "TBD",
+                    "type": "workshop"
+                }
+            },
+            {
+                "title": "Session C: Sustainable Tech",
+                "start": "2026-06-02T09:30:00",
+                "end": "2026-06-02T10:45:00",
+                "extendedProps": {
+                    "location": "Room B2",
+                    "speaker": "Dr. Priya Menon",
+                    "track": "Sustainability",
+                    "session": "C",
+                    "moderator": "TBD",
+                    "type": "sustainability"
+                }
+            },
+            {
+                "title": "Coffee Break",
+                "start": "2026-06-02T11:00:00",
+                "end": "2026-06-02T11:30:00",
+                "extendedProps": {
+                    "location": "Lounge",
+                    "track": "Social",
+                    "session": null,
+                    "moderator": null,
+                    "type": "social"
+                }
+            },
+            {
+                "title": "Session D: Data Security and Privacy",
+                "start": "2026-06-02T11:30:00",
+                "end": "2026-06-02T12:45:00",
+                "extendedProps": {
+                    "location": "Room C3",
+                    "speaker": "Dr. Ahmed Khan",
+                    "track": "Security",
+                    "session": "D",
+                    "moderator": "TBD",
+                    "type": "security"
+                }
+            },
+            {
+                "title": "Lunch",
+                "start": "2026-06-02T12:45:00",
+                "end": "2026-06-02T13:45:00",
+                "extendedProps": {
+                    "location": "Main Hall",
+                    "track": "Social",
+                    "session": null,
+                    "moderator": null,
+                    "type": "social"
+                }
+            },
+            {
+                "title": "Parallel Tutorials",
+                "start": "2026-06-02T14:00:00",
+                "end": "2026-06-02T16:00:00",
+                "extendedProps": {
+                    "location": "Room B2, Room C3",
+                    "track": "Tutorials",
+                    "session": null,
+                    "moderator": "TBD",
+                    "type": "tutorials"
+                }
+            },
+            {
+                "title": "Poster Session 2",
+                "start": "2026-06-02T16:00:00",
+                "end": "2026-06-02T17:30:00",
+                "extendedProps": {
+                    "location": "Exhibit Area",
+                    "track": "Posters",
+                    "session": 2,
+                    "moderator": null,
+                    "type": "posters"
+                }
+            },
+            {
+                "title": "Keynote: Quantum Enabled Networks",
+                "start": "2026-06-03T09:00:00",
+                "end": "2026-06-03T10:00:00",
+                "extendedProps": {
+                    "location": "Auditorium",
+                    "speaker": "Prof. Laura Cheng",
+                    "track": "Keynote",
+                    "session": null,
+                    "moderator": null,
+                    "type": "keynote"
+                }
+            },
+            {
+                "title": "Session E: Aerospace Applications",
+                "start": "2026-06-03T10:15:00",
+                "end": "2026-06-03T11:30:00",
+                "extendedProps": {
+                    "location": "Room B2",
+                    "speaker": "Dr. Afshin Rahimi",
+                    "track": "Aerospace",
+                    "session": "E",
+                    "moderator": "TBD",
+                    "type": "aerospace"
+                }
+            },
+            {
+                "title": "Session F: Energy Systems",
+                "start": "2026-06-03T10:15:00",
+                "end": "2026-06-03T11:30:00",
+                "extendedProps": {
+                    "location": "Room C3",
+                    "speaker": "Dr. Daniel Brooks",
+                    "track": "Energy",
+                    "session": "F",
+                    "moderator": "TBD",
+                    "type": "energy"
+                }
+            },
+            {
+                "title": "Closing Ceremony and Awards",
+                "start": "2026-06-03T13:00:00",
+                "end": "2026-06-03T14:30:00",
+                "extendedProps": {
+                    "location": "Auditorium",
+                    "track": "Closing",
+                    "session": null,
+                    "moderator": null,
+                    "type": "closing"
+                }
+            },
+            {
+                "title": "Farewell Reception",
+                "start": "2026-06-03T15:00:00",
+                "end": "2026-06-03T17:00:00",
+                "extendedProps": {
+                    "location": "Lobby",
+                    "track": "Social",
+                    "session": null,
+                    "moderator": null,
+                    "type": "social"
+                }
+            }
+        ]
+    },
+    "registration": {
+        "fees": [
+            {
+                "category": "",
+                "early": "",
+                "regular": ""
+            },
+            {
+                "category": "IEEE Life Member",
+                "early": "$500",
+                "regular": "$600"
+            },
+            {
+                "category": "In-person Presenting Author",
+                "early": "$750",
+                "regular": "$900",
+                "noteId": [
+                    1,
+                    "NM"
+                ]
+            },
+            {
+                "category": "In-person Presenting Student",
+                "early": "$650",
+                "regular": "$775",
+                "noteId": [
+                    1,
+                    "NM"
+                ]
+            },
+            {
+                "category": "Virtual Presenting Author",
+                "early": "$700",
+                "regular": "$850",
+                "noteId": [
+                    1,
+                    "NM"
+                ]
+            },
+            {
+                "category": "Virtual Presenting Student",
+                "early": "$625",
+                "regular": "$725",
+                "noteId": [
+                    1,
+                    "NM"
+                ]
+            },
+            {
+                "category": "In-person Attendee",
+                "early": "$1,000",
+                "regular": "$1,200",
+                "noteId": [
+                    2,
+                    "NM"
+                ]
+            },
+            {
+                "category": "In-person Student Attendee",
+                "early": "$650",
+                "regular": "$775",
+                "noteId": [
+                    2,
+                    "NM"
+                ]
+            },
+            {
+                "category": "Virtual Attendee",
+                "early": "$30",
+                "regular": "$30",
+                "noteId": [
+                    2,
+                    "NM"
+                ]
+            },
+            {
+                "category": "Exhibitor",
+                "early": "$1,100",
+                "regular": "$1,300"
+            },
+            {
+                "category": "Sponsorship, Silver",
+                "early": "$3,000",
+                "regular": "$3,000",
+                "noteId": 4
+            },
+            {
+                "category": "Sponsorship, Gold",
+                "early": "$5,000",
+                "regular": "$5,000",
+                "noteId": 5
+            },
+            {
+                "category": "Sponsorship, Platinum",
+                "early": "$10,000",
+                "regular": "$10,000",
+                "noteId": 6
+            },
+            {
+                "category": "Panelist",
+                "early": "$625",
+                "regular": "$625",
+                "noteId": [
+                    3,
+                    "NM"
+                ]
+            },
+            {
+                "category": "Panel/Session Moderator",
+                "early": "Gratis",
+                "regular": "Gratis",
+                "noteId": 3
+            },
+            {
+                "category": "Tutorial Instructor/Keynote Speaker",
+                "early": "Gratis",
+                "regular": "Gratis",
+                "noteId": 3
+            },
+            {
+                "category": "Committee Chair",
+                "early": "Gratis",
+                "regular": "Gratis",
+                "noteId": 3
+            },
+            {
+                "category": "Extra Banquet Ticket",
+                "early": "$50",
+                "regular": "$50"
+            }
+        ],
+        "notes": {
+            "1": "You can present 2 papers with 1 registration",
+            "2": "At least one author must be registered as a presenter (in-person or virtual)",
+            "3": "Committee chairs, tutorial instructors, panel members and panel/session chairs will receive a discount code to register using the posted rates",
+            "4": "Includes no additional registrations",
+            "5": "Includes 2 registrations (1 extra free)",
+            "6": "Includes 5 registrations (4 extra free)",
+            "NM": "Non-Member"
+        }
+    },
+    "sponsors": [
+        {
+            "name": "Ridgetop Group, Inc.",
+            "level": "Gold",
+            "type": "corporate",
+            "image_url": "assets/sponsors/ridgetop_group_logo.jpg",
+            "website": "https://www.ridgetopgroup.com/"
+        },
+        {
+            "name": "IEEE Reliability Society",
+            "level": "Financial",
+            "type": "society",
+            "image_url": "assets/sponsors/ieee_reliability_society.png",
+            "website": "https://rs.ieee.org/"
+        },
+        {
+            "name": "CableLabs",
+            "level": "Technical",
+            "type": "corporate",
+            "image_url": "assets/sponsors/cablelabs.png",
+            "website": "https://www.cablelabs.com/"
+        },
+        {
+            "name": "Toronto Metropolitan University",
+            "/level": "Technical",
+            "type": "academic",
+            "image_url": "assets/sponsors/tmu.jpg",
+            "website": "https://www.torontomu.ca/"
+        },
+        {
+            "name": "IEEE",
+            "/level": "Technical",
+            "type": "society",
+            "image_url": "assets/sponsors/ieee.svg",
+            "website": "https://www.ieee.org/"
+        },
+        {
+            "name": "Eastern Washington University CSTEM",
+            "level": "Technical",
+            "type": "academic",
+            "image_url": "/assets/sponsors/cstem_logo.png",
+            "website": "https://www.ewu.edu/cstem/"
+        },
+        {
+            "name": "Malardalen University",
+            "/level": "Technical",
+            "type": "academic",
+            "image_url": "https://www.mdu.se/images/18.573bb95917d7063b4b221126/1639415494071/MDU_logotype_english.svg",
+            "website": "https://www.mdu.se/en/malardalen-university"
+        },
+        {
+            "name": "Malardalen Industrial Technology Center (MITC)",
+            "/level": "Technical",
+            "type": "academic",
+            "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVfPJ60ztUpW7_7vSnrY41By8hkmKUgaNR1w&s",
+            "website": "https://mitc.se/en/home/"
+        }
+    ],
+    "cfp": {
+        "mode": "Hybrid",
+        "maxPage": "8 pages",
+        "note": "This is a hybrid conference with options for in-person oral or poster presentations as well as remote oral presentations.",
+        "highlight": "This year, ICPHM will highlight system reliability, asset lifespan, and advanced techniques across sectors, with a special emphasis on Al-driven PHM algorithms, validation strategies, and evaluation frameworks to ensure reliability, resilience, and trustworthiness across diverse applications.",
+        "topics": {
+            "sections": [
+                {
+                    "title": "This Year's Focus",
+                    "type": "list",
+                    "listType": "disc",
+                    "items": [
+                        "Aerospace, Automotive, Energy, and Industrial Systems",
+                        "PHM for Next-Generation Communication Networks (5G/6G)",
+                        "PHM for Autonomous Vehicles, Smart Infrastructures, and IoT",
+                        "Robotics, Electronics, and microelectronics Reliability",
+                        "Cross-domain transferability and scalability of PHM algorithms",
+                        "Benchmarking frameworks and standardized testbeds",
+                        "AI-Centric PHM Systems",
+                        "Explainable and Trustworthy PHM for Decision Support",
+                        "Adaptive PHM Learning Architectures",
+                        "Remaining Useful Life Estimation under Uncertainty",
+                        "Data Fusion across Multimodal and Heterogeneous Sensors",
+                        "Degradation modeling and health indicator extraction",
+                        "Uncertainty quantification and risk-aware decision-making",
+                        "Information Reliability"
+                    ]
+                },
+                {
+                    "title": "Product-Oriented Overviews of PHM Sensors, Techniques, Technology, and Methodologies",
+                    "type": "list",
+                    "listType": "disc",
+                    "items": [
+                        "Applications of PHM in digital electronics, manufacturing, aerospace, military, green energy systems, LED lighting, etc.",
+                        "Topics of interest include fault detection, diagnostics, prognostics, soft faults, intermittent failures, availability, and remaining useful life assessment.",
+                        "Case studies, transitions from preventive to proactive maintenance, and system health assessment under complex life-cycle conditions are also welcome."
+                    ]
+                },
+                {
+                    "title": "Product Applications",
+                    "type": "list",
+                    "listType": "disc",
+                    "items": [
+                        "Aerospace & Military Systems",
+                        "Automotive Electronics and Electrified Vehicles",
+                        "Structural Health Monitoring and Nondestructive Evaluation (NDE/NDT)",
+                        "Manufacturing Processes & Equipment Maintenance",
+                        "Computer Industry, Data Centers, Cloud Computing",
+                        "Wind Energy, Smart Grid, Renewable Energy Systems",
+                        "Medical Equipment & Devices",
+                        "Nuclear Power & Life-Extension Systems"
+                    ]
+                },
+                {
+                    "title": "Supporting Implementation Technologies",
+                    "type": "list",
+                    "listType": "disc",
+                    "items": [
+                        "Financial Benefit / Return on Investment (ROI) and business case development for PHM systems",
+                        "Logic, Algorithms & Reasoning Approaches: machine learning, physics-of-failure models, reasoning under uncertainty",
+                        "Condition-Based Maintenance (CBM) and Predictive Maintenance (PdM)",
+                        "Sensors, Wearables, “Canaries”, and data acquisition systems",
+                        "Numerical Modeling, Physics-based methods, simulation & estimation of degradation",
+                        "Standards, best practices, metrics, reliability, terminology, and definitions in PHM systems"
+                    ]
+                }
+            ]
+        }
+    },
+    "location": {
+        "slides": [
+            {
+                "src": "https://images.unsplash.com/photo-1697265772827-dee45b1add00?q=80&w=1331&auto=format&fit=crop",
+                "alt": "Toronto Skyline"
+            },
+            {
+                "/src": "https://images.unsplash.com/photo-1542704792-e30dac463c90?q=80&w=1170&auto=format&fit=crop",
+                "alt": "Toronto City"
+            },
+            {
+                "src": "https://images.unsplash.com/photo-1506360951071-d404a18aca48?q=80&w=1170&auto=format&fit=crop",
+                "alt": "TMU Enterance"
+            }
+        ],
+        "slidesInterval": 5000
+    }
+}

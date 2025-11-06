@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Event Calendar</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- CSV parsing for program integrations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Load SimpleCalendar Libraries -->
+    <script src="simplecalendar.js"></script>
+    <script src="data.js"></script>
+    <link href="simplecalendar.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 font-sans min-h-screen">
+
+    <div id="calendar-app" class="mx-auto p-6 printable-area">
+        <!-- Calendar will be rendered here -->
+    </div>
+
+    <script>
+        async function loadData() {
+            //console.log('loading data...');
+            return await fetchData();
+            console.log(data);
+        }
+
+
+        // --- Sample Data Definition ---
+        var sampleEvents = [
+            // The requested 3-day event
+            {
+                id: 4, title: 'Deep Work Session',
+                start: '2025-11-02T08:00:00',
+                end: '2025-11-02T12:00:00',
+                color: 'bg-green-600',
+                textColor: 'text-white'
+            },
+            {
+                id: 5, title: 'Deployment Window (Overnight)',
+                start: '2025-11-03T10:00:00',
+                end: '2025-11-03T12:00:00',
+                color: 'bg-gray-700',
+                textColor: 'text-white'
+            },
+            {
+                id: 1, title: 'Annual Project Kick-off Meeting',
+                start: '2025-11-04T10:00:00',
+                end: '2025-11-04T16:00:00',
+                color: 'bg-red-500',
+                textColor: 'text-white'
+            },
+            {
+                id: 2, title: 'Team Sync-up (Concurrent A)',
+                start: '2025-11-04T14:30:00',
+                end: '2025-11-04T16:00:00',
+                color: 'bg-amber-500',
+                textColor: 'text-gray-900'
+            },
+            {
+                id: 3, title: 'UX Review (Concurrent B)',
+                start: '2025-11-04T15:00:00',
+                end: '2025-11-04T17:00:00',
+                color: 'bg-purple-500',
+                textColor: 'text-white'
+            },
+        ];
+        // --- Initialization ---
+
+        window.onload = async function () {
+            const data = await loadData();
+            sampleEvents = data;
+            //console.log(sampleEvents);
+            // Set the initial date to the start date of the 3-day event for demonstration
+            const initialDate = '2026-06-01';
+            const finalDate = '2026-06-03';
+            //window.calendar = new SimpleCalendar('calendar-app', null, sampleEvents);
+            window.calendar = new SimpleCalendar(
+                'calendar-app',
+                sampleEvents,
+                {
+                    initialDate: initialDate,
+                    originalTimezone: 'America/Toronto',
+                    userTimezone: "America/Toronto",
+                    initialView: 'Day1',
+                    slotMinTime: '04:00:00',
+                    slotMaxTime: '18:00:00',
+                    visibleRange:
+                        { start: initialDate, end: finalDate },
+                    validRange:
+                        { start: initialDate, end: finalDate },
+                    hourHeightpx: 200,
+                    headerToolbar: { left: 'prev,next', center: 'title', right: 'Day1,Day3' },
+                    autoFitEvents:true
+                    //views: { Full: { durationDays: 3 } },
+                    //eventDidMount: yourHandler,
+                    //eventContent: yourRenderer,
+                    //datesSet: yourDatesSetHandler
+                }
+            )
+        };
+    </script>
+</body>
+
+</html>
