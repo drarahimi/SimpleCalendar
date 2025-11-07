@@ -178,7 +178,7 @@ The component uses Tailwind utility classes for layout and style. To customize a
 
 ## License
 
-Specify your project's license here.
+Creative Commons Attribution-NonCommercial 4.0 International Public License (CC BY-NC 4.0)
 
 ---
 
