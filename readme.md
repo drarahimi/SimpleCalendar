@@ -4,6 +4,7 @@ SimpleCalendar is a lightweight, timezone aware, multi day calendar component im
 
 This project is suitable for embedding into conference websites, academic schedules, program overviews, or any application that needs a clean, interactive time based layout without pulling in heavy calendar libraries.
 
+![SimpleCalendar screenshot](screenshot.png)
 ---
 
 ## Features
