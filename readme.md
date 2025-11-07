@@ -30,6 +30,11 @@ Include the script and its dependencies (Luxon, jsPDF and html2canvas pro):
 
 The library automatically loads Luxon, jsPDF, and html2canvas pro from CDNs when instantiated.
 
+ loadScript('https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js');
+ loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+ loadScript('https://github.com/yorickshan/html2canvas-pro/releases/download/v1.5.12/html2canvas-pro.min.js');
+ 
+
 ---
 
 ## Basic Usage

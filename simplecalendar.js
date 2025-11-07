@@ -1,4 +1,3 @@
-// simplecalendar.js (revised)
 // Load dependencies
 async function loadDependencies() {
     try {
@@ -738,12 +737,61 @@ class SimpleCalendar {
         return html;
     }
 
+    getContrastForeColor(color) {
+        let r, g, b;
+
+        if (color.startsWith("#")) {
+            // Remove the hash
+            color = color.slice(1);
+
+            // Expand shorthand hex to full form, e.g. #abc → #aabbcc
+            if (color.length === 3) {
+                color = color.split("").map(c => c + c).join("");
+            }
+
+            r = parseInt(color.substring(0, 2), 16);
+            g = parseInt(color.substring(2, 4), 16);
+            b = parseInt(color.substring(4, 6), 16);
+
+        } else if (color.startsWith("rgb")) {
+            // Match rgb or rgba
+            const values = color.match(/rgba?\(([^)]+)\)/);
+            if (!values) return "black"; // Fallback
+
+            const parts = values[1].split(",").map(x => parseFloat(x.trim()));
+            [r, g, b] = parts;
+        } else {
+            // Unsupported format
+            return "black";
+        }
+
+        // Normalize to 0–1 and compute luminance
+        const luminance = (0.2126 * r / 255) + (0.7152 * g / 255) + (0.0722 * b / 255);
+
+        return luminance > 0.7 ? "black" : "white";
+    }
+    // Function to check if the value is a valid hex color
+    isHexColor(value) {
+        // Hex color regex (handles 6 or 3 digit hex colors with or without a leading '#')
+        const hexPattern = /^#?([0-9A-Fa-f]{3}){1,2}$/;
+        return hexPattern.test(value);
+    }
+    // Function to get hex value from either color name or hex input
+    getHexColor(value) {
+        if (isHexColor(value)) {
+            return value.startsWith("#") ? value : "#" + value; // Ensure hex has a leading '#'
+        }
+        // If not a valid hex color, check if it's a color name
+        const color = colorNames[value.toLowerCase()];
+        return color || null; // Return hex color if found, otherwise null
+    }
+
     renderDayContainer(dayName, events, gridClass) {
         let eventsHtml = '';
 
         events.forEach(event => {
             const eventColor = event.color || '#4098fdff';
-            const eventTextColor = event.textColor || '#ffffff';
+            const eventTextColor = event.textColor || this.getContrastForeColor(eventColor);
             const eventTitle = event.title || '';
             const eventSubtitle = event.subtitle || '';
             const eventNote = event.note || '';
@@ -797,7 +845,7 @@ class SimpleCalendar {
                     <div class="text-md font-regular truncate mt-2 pb-2">${(eventNote || '').replace(/\n/g, '<br>')}</div>
                 `;
             }
-
+            console.log(eventColor);
             eventsHtml += `
                 <div class="sc-event-box border"
                     data-ev-id="${event.id || ''}"
