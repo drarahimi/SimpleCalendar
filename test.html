@@ -67,7 +67,7 @@
 
         window.onload = async function () {
             const data = await loadData();
-            //sampleEvents = data;
+            sampleEvents = data;
             //console.log(sampleEvents);
             // Set the initial date to the start date of the 3-day event for demonstration
             const initialDate = '2026-06-01';
@@ -87,7 +87,7 @@
                         { start: initialDate, end: finalDate },
                     validRange:
                         { start: initialDate, end: finalDate },
-                    hourHeightpx: 50,
+                    hourHeightpx: 250,
                     headerToolbar: { left: 'prev,next', center: 'title', right: 'Day1,Day3' },
                     autoFitEvents:true
                     //views: { Full: { durationDays: 3 } },

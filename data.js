@@ -77,6 +77,7 @@ async function loadGoogleSheets(data) {
             event.details.session = row.session || null;
             event.details.mode = row.mode || "";
             event.details.moderator = row.moderator || null;
+            event.details.videolink = row.videolink || null;
 
             // Look up color by session type
             event.color = typeColors[event.details.type] || "#999999";
