@@ -796,21 +796,21 @@ class SimpleCalendar {
             const eventSubtitle = event.subtitle || '';
             const eventNote = event.note || '';
             const eventModerator = event.details?.moderator || '';
-            const eventRoom = event.details?.room || '';
-            const hasRoom = eventRoom
-                && eventRoom.trim() !== ""
-                && !eventRoom.toLowerCase().includes("n/a");
+            const hasRoom = event.details?.room
+                && event.details?.room.trim() !== ""
+                && !event.details?.room.toLowerCase().includes("n/a");
+            const eventRoom = hasRoom? `${roomSvg}${event.details?.room}` : '';
 
             const hasModerator = eventModerator
                 && eventModerator.trim() !== ""
                 && !eventModerator.toLowerCase().includes("n/a");
             //https://www.svgviewer.dev/
             const roomSvg = `<svg width="16px" height="16px" style="display:inline" viewBox="3 0 18 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="0" fill="none" width="20" height="20"/>
-<g>
-<path d="M10 2C6.69 2 4 4.69 4 8c0 2.02 1.17 3.71 2.53 4.89.43.37 1.18.96 1.85 1.83.74.97 1.41 2.01 1.62 2.71.21-.7.88-1.74 1.62-2.71.67-.87 1.42-1.46 1.85-1.83C14.83 11.71 16 10.02 16 8c0-3.31-2.69-6-6-6zm0 2.56c1.9 0 3.44 1.54 3.44 3.44S11.9 11.44 10 11.44 6.56 9.9 6.56 8 8.1 4.56 10 4.56z"stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</svg>`;
+                                <rect x="0" fill="none" width="20" height="20"/>
+                                <g>
+                                <path d="M10 2C6.69 2 4 4.69 4 8c0 2.02 1.17 3.71 2.53 4.89.43.37 1.18.96 1.85 1.83.74.97 1.41 2.01 1.62 2.71.21-.7.88-1.74 1.62-2.71.67-.87 1.42-1.46 1.85-1.83C14.83 11.71 16 10.02 16 8c0-3.31-2.69-6-6-6zm0 2.56c1.9 0 3.44 1.54 3.44 3.44S11.9 11.44 10 11.44 6.56 9.9 6.56 8 8.1 4.56 10 4.56z"stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </g>
+                            </svg>`;
             const moderatorSvg = `<svg fill="currentColor" width="16px" height="16px" style="display:inline" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M860 265h-61q-8 0-13.5 5.5T780 284v246q0 39-28 67t-68 28H279q-8 0-13.5 5.5T260 644v61q0 17 11.5 28.5T300 745h415q25 0 43 18l110 110q4 4 9.5 5t11-1 8.5-7 3-11V305q0-17-11.5-28.5T860 265zM700 505V145q0-17-11.5-28.5T660 105H140q-17 0-28.5 11.5T100 145v514q0 6 3 11t8.5 7 11 1 9.5-5l110-110q18-18 43-18h375q17 0 28.5-12t11.5-28z"/></svg>`;
             const roomModerator = hasModerator ? `${moderatorSvg} ${eventModerator}` : '';
             const presenterSVg = `<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="16" height="16" style="display:inline" viewBox="4 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
@@ -841,7 +841,7 @@ class SimpleCalendar {
                     <div class="text-xs opacity-80">${startTime}-${endTime}</div>
                     <div class="text-xs">${presenterHtml}</div>
                     <div class="text-xs">${roomModerator}</div>
-                    <div class="text-xs">${roomSvg}${eventRoom}</div>
+                    <div class="text-xs">${eventRoom}</div>
                     <div class="text-md font-regular truncate mt-2 pb-2">${(eventNote || '').replace(/\n/g, '<br>')}</div>
                 `;
             }
@@ -962,23 +962,39 @@ class SimpleCalendar {
                 const props = evObj.details || {};
                 const tooltip = document.createElement('div');
                 tooltip.className = 'absolute z-50 hidden bg-gray-900 text-white text-sm rounded px-2 py-1 shadow-lg';
-                tooltip.innerHTML = `
-                    <div class="font-semibold">${evObj.title || ''}</div>
-                    ${props.room ? `<div class="text-gray-300">Room: ${props.room}</div>` : ''}
-                    ${props.speaker ? `<div class="text-gray-400 text-xs">Speaker: ${props.speaker}</div>` : ''}
-                    ${props.track ? `<div class="text-gray-400 text-xs">Track: ${props.track}</div>` : ''}
-                `;
+                tooltip.innerHTML = el.innerHTML;
                 document.body.appendChild(tooltip);
+
+                const offset = 10;
+
+                const positionTip = (e) => {
+                    const tipRect = tooltip.getBoundingClientRect();
+                    const pageWidth = window.innerWidth;
+                    const pageHeight = window.innerHeight;
+
+                    let x = e.pageX + offset;
+                    let y = e.pageY + offset;
+
+                    if (x + tipRect.width > pageWidth) {
+                        x = pageWidth - tipRect.width - offset;
+                    }
+                    if (y + tipRect.height > pageHeight) {
+                        y = pageHeight - tipRect.height - offset;
+                    }
+
+                    tooltip.style.left = x + 'px';
+                    tooltip.style.top = y + 'px';
+                };
 
                 const showTip = (e) => {
                     tooltip.classList.remove('hidden');
-                    tooltip.style.left = e.pageX + 10 + 'px';
-                    tooltip.style.top = e.pageY + 10 + 'px';
+                    positionTip(e);
                 };
+
                 const moveTip = (e) => {
-                    tooltip.style.left = e.pageX + 10 + 'px';
-                    tooltip.style.top = e.pageY + 10 + 'px';
+                    positionTip(e);
                 };
+
                 const hideTip = () => {
                     tooltip.classList.add('hidden');
                 };
@@ -986,6 +1002,7 @@ class SimpleCalendar {
                 el.addEventListener('mouseenter', showTip);
                 el.addEventListener('mousemove', moveTip);
                 el.addEventListener('mouseleave', hideTip);
+
             }
         });
     }
