@@ -178,7 +178,17 @@ The component uses Tailwind utility classes for layout and style. To customize a
 
 ## License
 
-Creative Commons Attribution-NonCommercial 4.0 International Public License (CC BY-NC 4.0)
+Summary of Terms:
+
+Attribution (BY): You must give appropriate credit to the creator, provide a link to the license, and indicate if changes were made.
+
+NonCommercial (NC): You may not use this material for commercial purposes (e.g., selling it or using it to generate monetary compensation).
+
+Adaptation Allowed: You are free to remix, transform, and build upon the material, provided the resulting work is also non-commercial.
+
+Read the Full Legal Code
+
+For the complete terms and conditions, please see the LICENSE.md file in this repository.
 
 ---
 
