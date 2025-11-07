@@ -845,7 +845,7 @@ class SimpleCalendar {
                     <div class="text-md font-regular truncate mt-2 pb-2">${(eventNote || '').replace(/\n/g, '<br>')}</div>
                 `;
             }
-            console.log(eventColor);
+            //console.log(eventColor);
             eventsHtml += `
                 <div class="sc-event-box border"
                     data-ev-id="${event.id || ''}"
