@@ -971,49 +971,54 @@ class SimpleCalendar {
                 }
             } else {
                 const props = evObj.details || {};
+
+                // Create overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center';
+
+                // Create tooltip modal box
                 const tooltip = document.createElement('div');
-                tooltip.className = 'absolute z-50 hidden bg-gray-900 text-white text-sm rounded px-2 py-1 shadow-lg max-w-full break-words';
-                tooltip.style.pointerEvents = 'none'; // <- prevents tooltip from interfering with mouse events
-                tooltip.innerHTML = el.innerHTML;
-                document.body.appendChild(tooltip);
+                tooltip.className = 'bg-gray-900 text-white text-sm rounded px-4 py-3 shadow-lg max-w-lg w-full break-words';
 
-                const offset = 10;
+                // Clone HTML so we can modify it
+                const temp = document.createElement('div');
+                temp.innerHTML = el.innerHTML;
 
-                const positionTip = (e) => {
-                    const tipRect = tooltip.getBoundingClientRect();
-                    const pageWidth = window.innerWidth;
-                    const pageHeight = window.innerHeight;
+                // Remove truncate class from all elements that have it
+                temp.querySelectorAll('.truncate').forEach(node => {
+                    node.classList.remove('truncate');
+                });
 
-                    let x = e.pageX + offset;
-                    let y = e.pageY + offset;
+                // Now build the tooltip with cleaned HTML
+                tooltip.innerHTML = `
+    <div>${temp.innerHTML}</div>
+    <button class="mt-4 bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded close-btn">Close</button>
+`;
 
-                    if (x + tipRect.width > pageWidth) {
-                        x = pageWidth - tipRect.width - offset;
-                    }
-                    if (y + tipRect.height > pageHeight) {
-                        y = pageHeight - tipRect.height - offset;
-                    }
+                overlay.appendChild(tooltip);
+                document.body.appendChild(overlay);
 
-                    tooltip.style.left = x + 'px';
-                    tooltip.style.top = y + 'px';
+                // Close on overlay click or button
+                overlay.addEventListener('click', e => {
+                    if (e.target === overlay) overlay.classList.add('hidden');
+                });
+
+                tooltip.querySelector('.close-btn').addEventListener('click', () => {
+                    overlay.classList.add('hidden');
+                });
+
+                // Show modal
+                const showTip = () => {
+                    overlay.classList.remove('hidden');
                 };
 
-                const showTip = (e) => {
-                    tooltip.classList.remove('hidden');
-                    positionTip(e);
-                };
-
-                const moveTip = (e) => {
-                    positionTip(e);
-                };
-
+                // Hide modal
                 const hideTip = () => {
-                    tooltip.classList.add('hidden');
+                    overlay.classList.add('hidden');
                 };
 
-                el.addEventListener('mouseenter', showTip);
-                el.addEventListener('mousemove', moveTip);
-                el.addEventListener('mouseleave', hideTip);
+                // Trigger
+                el.addEventListener('click', showTip);
 
             }
         });
