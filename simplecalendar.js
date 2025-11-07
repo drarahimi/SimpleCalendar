@@ -794,14 +794,14 @@ class SimpleCalendar {
                             <path d="M46.9,13.1L35.9,21v-5.6c0-1.5-1.2-2.7-2.7-2.7H4.7c-1.5,0-2.7,1.2-2.7,2.7v21.3c0,1.5,1.2,2.7,2.7,2.7h28.6
                                 c1.5,0,2.7-1.2,2.7-2.7v-5.5L46.9,39c0.7,0.7,1.9,0.2,1.9-0.8V13.9C48.8,12.9,47.6,12.4,46.9,13.1z"/>
                             </svg>`
-            const roomSvg = `<svg width="16px" height="16px" style="display:inline" viewBox="3 0 18 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+        const roomSvg = `<svg width="16px" height="16px" style="display:inline" viewBox="3 0 18 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="0" fill="none" width="20" height="20"/>
                                 <g>
                                 <path d="M10 2C6.69 2 4 4.69 4 8c0 2.02 1.17 3.71 2.53 4.89.43.37 1.18.96 1.85 1.83.74.97 1.41 2.01 1.62 2.71.21-.7.88-1.74 1.62-2.71.67-.87 1.42-1.46 1.85-1.83C14.83 11.71 16 10.02 16 8c0-3.31-2.69-6-6-6zm0 2.56c1.9 0 3.44 1.54 3.44 3.44S11.9 11.44 10 11.44 6.56 9.9 6.56 8 8.1 4.56 10 4.56z"stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </g>
                             </svg>`;
-            const moderatorSvg = `<svg fill="currentColor" width="16px" height="16px" style="display:inline" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M860 265h-61q-8 0-13.5 5.5T780 284v246q0 39-28 67t-68 28H279q-8 0-13.5 5.5T260 644v61q0 17 11.5 28.5T300 745h415q25 0 43 18l110 110q4 4 9.5 5t11-1 8.5-7 3-11V305q0-17-11.5-28.5T860 265zM700 505V145q0-17-11.5-28.5T660 105H140q-17 0-28.5 11.5T100 145v514q0 6 3 11t8.5 7 11 1 9.5-5l110-110q18-18 43-18h375q17 0 28.5-12t11.5-28z"/></svg>`;
-            const presenterSVg = `<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="16" height="16" style="display:inline" viewBox="4 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+        const moderatorSvg = `<svg fill="currentColor" width="16px" height="16px" style="display:inline" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M860 265h-61q-8 0-13.5 5.5T780 284v246q0 39-28 67t-68 28H279q-8 0-13.5 5.5T260 644v61q0 17 11.5 28.5T300 745h415q25 0 43 18l110 110q4 4 9.5 5t11-1 8.5-7 3-11V305q0-17-11.5-28.5T860 265zM700 505V145q0-17-11.5-28.5T660 105H140q-17 0-28.5 11.5T100 145v514q0 6 3 11t8.5 7 11 1 9.5-5l110-110q18-18 43-18h375q17 0 28.5-12t11.5-28z"/></svg>`;
+        const presenterSVg = `<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="16" height="16" style="display:inline" viewBox="4 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
 
         events.forEach(event => {
             const eventColor = event.color || '#4098fdff';
@@ -813,11 +813,11 @@ class SimpleCalendar {
             const hasRoom = event.details?.room
                 && event.details?.room.trim() !== ""
                 && !event.details?.room.toLowerCase().includes("n/a");
-            const eventRoom = hasRoom? `${roomSvg}${event.details?.room}` : '';
+            const eventRoom = hasRoom ? `${roomSvg}${event.details?.room}` : '';
             const hasVideoLink = event.details?.videolink
                 && event.details?.videolink.trim() !== ""
                 && !event.details?.videolink.toLowerCase().includes("n/a");
-            const eventVideoLink = hasVideoLink? `${videoSvg} <a target='_blank' href='${event.details?.videolink}'>${event.details?.videolink}</a>` : '';
+            const eventVideoLink = hasVideoLink ? `${videoSvg} <a target='_blank' href='${event.details?.videolink}'>${event.details?.videolink}</a>` : '';
 
             const hasModerator = eventModerator
                 && eventModerator.trim() !== ""
@@ -973,7 +973,7 @@ class SimpleCalendar {
                 const props = evObj.details || {};
                 const tooltip = document.createElement('div');
                 tooltip.className = 'absolute z-50 hidden bg-gray-900 text-white text-sm rounded px-2 py-1 shadow-lg max-w-full break-words';
-
+                tooltip.style.pointerEvents = 'none'; // <- prevents tooltip from interfering with mouse events
                 tooltip.innerHTML = el.innerHTML;
                 document.body.appendChild(tooltip);
 
