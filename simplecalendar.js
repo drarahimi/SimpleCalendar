@@ -286,7 +286,7 @@ class SimpleCalendar {
         // Round down/up to nearest hour (or configurable step)
         const step = 60; // 60 = round to hour, 30 = round to half hour
         this.slotMinMinutes = Math.floor(minMinutes / step) * step;
-        this.slotMaxMinutes = Math.floor(maxMinutes / step) * step;
+        this.slotMaxMinutes = Math.ceil(maxMinutes / step) * step;
         //console.log(`${minMinutes} ${(minMinutes / step)} ${Math.floor(minMinutes / step)}`);
         //console.log(`${maxMinutes} ${(maxMinutes / step)} ${Math.ceil(maxMinutes / step)}`);
         this.visibleMinutes = this.slotMaxMinutes - this.slotMinMinutes;
