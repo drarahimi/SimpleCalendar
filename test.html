@@ -25,7 +25,7 @@
         async function loadData() {
             //console.log('loading data...');
             return await fetchData();
-            console.log(data);
+            //console.log(data);
         }
 
 
@@ -66,8 +66,9 @@
         // --- Initialization ---
 
         window.onload = async function () {
-            const data = await loadData();
-            sampleEvents = data;
+            const { data, allEvents } = await fetchData();
+            sampleEvents = allEvents;
+            //console.log(data.committee)
             //console.log(sampleEvents);
             // Set the initial date to the start date of the 3-day event for demonstration
             const initialDate = '2026-06-01';
@@ -79,18 +80,75 @@
                 {
                     initialDate: initialDate,
                     originalTimezone: 'America/Toronto',
-                    userTimezone: "America/Toronto",
+                    userTimezone: "Asia/Tokyo",
                     initialView: 'Day1',
-                    slotMinTime: '04:00:00',
-                    slotMaxTime: '18:00:00',
+                    slotMinTime: '00:00:00',
+                    slotMaxTime: '24:00:00',
                     visibleRange:
                         { start: initialDate, end: finalDate },
                     validRange:
                         { start: initialDate, end: finalDate },
                     hourHeightpx: 250,
-                    headerToolbar: { left: 'prev,next', center: 'title', right: 'Day1,Day3' },
-                    autoFitEvents:true
-                    //views: { Full: { durationDays: 3 } },
+                    autoFitEvents: true,
+                    headerToolbar: { left: 'prev,next', center: 'title', right: 'Day1,Valid' },
+                    pdf: {
+                        margin: 15,
+                        overlayMargin: 5,
+                        overlayOpacity: 0.85,
+                        backgroundColor: '#002781',
+                        fillColor: '#002781',
+                        backgroundUrl: 'https://images.unsplash.com/photo-1697265772827-dee45b1add00?q=80&amp;w=1331&amp;auto=format&amp;fit=crop',
+                        //logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/IEEE_logo.svg/320px-IEEE_logo.svg.png',
+                        logoUrl: 'https://i.ibb.co/ZRNt81mY/phm-logo-clear.png',
+                        maxLogoWidth: 30,
+                        maxLogoHeight: 30,
+                        longDateFormat: 'EEEE, LLLL d, yyyy (z)',
+                        timeLabelFormat: 'HH:mm',
+                        footerText: 'ICPHM 2026',
+                        columns: [
+                            { label: 'Time', key: 'timerange', width: 10 },
+                            { label: 'Title', key: 'title', width: 50 },
+                            { label: 'Speaker', key: 'speaker', width: 15 },
+                            { label: 'Moderator', key: 'moderator', width: 15 },
+                            { label: 'Room', key: 'room', width: 10 }
+                        ],
+                        cover: {
+                            title: "Conference Program",
+                            subtitle: "2026 IEEE International Conference on Prognostics and Health Management",
+                            extraLines: [
+                                "Enhancing Safety, Efficiency, Availability, and Effectiveness of Systems through PHM Technology and Application",
+                                ""
+                            ],
+                            dates: "June 1-3, 2026",
+                            location: "Toronto, Canada",
+                        },
+                        welcome: {
+                            title: "Welcome Message",
+                            message: `On behalf of the IEEE Reliability Society, welcome to ICPHM 2026 and welcome to Toronto, ON. Please look forward to an exciting conference and the opportunity to attend many ground-breaking presentations of the latest applications, research, and development in the PHM discipline. I hope that you will have a chance to make some new professional contacts, so you can leverage what you learn to your job, thus benefiting yourself and your company or university.
+
+The IEEE is the world's largest professional organization with over 400,000 members in 160 countries. The Reliability Society (RS) is one of 45 technical societies and councils within the IEEE focused on the broad aspects of reliability engineering, also commonly known as the specialty engineering disciplines. RS has the management, resources, and administrative and technical structures to develop and to provide technical information via publications, training, conferences, and technical library (IEEE Xplore) data to its RS members and the Specialty Engineering community. You can learn more by visiting the Reliability Society website, which is the gateway to the many resources that the RS makes available to its members and others interested in the broad aspects of reliability.
+
+The Reliability Society is committed to advancing the state-of-the-art of the Specialty Engineering disciplines as demonstrated by its sponsorship of this and many other conferences. PHM goes hand-in-hand with Reliability as PHM can directly improve effective reliability, availability, mission reliability, system safety, and maintenance by being able to provide on-condition health, prognose pending failure, and predict future health status.
+
+If you are not already a member, please consider joining the Reliability Society to help create a win-win situation for you and the Reliability Society in this current dynamic, world-wide technology environment. By joining the Reliability Society and participating actively, you, as an individual, receive access to the Society's many resources plus the opportunities to interact with many of the "movers and shakers" in this broad reliability discipline. Joining and actively participating are great opportunities for professional growth!
+
+Sincerely,
+J. Rupe, PhD
+IEEE Reliability Society President 2025-Present`
+                        },
+                        closing: {
+                            title: 'Closing Remarks',
+                            message: `The 2026 IEEE International PHM Conference is the world's premiere forum for PHM and the only PHM conference financially sponsored by the IEEE. PHM is a wide-ranging, interdisciplinary field that requires an energized exchange of ideas. This conference will bring together world-class expertise in academia, engineering, and management disciplines to foster synergistic exchanges among academics and industry practitioners. Special attention is paid to ensuring a professional, sociable environment that encourages networking, forging new relationships, and deepening existing ones.`
+                        },
+                        committee: {
+                            title: 'Committee',
+                            colGap: 10,
+                            columns: 3,
+                            cardHeight: 25,
+                            list: data.committee
+                        }
+                    }
+                    //views: { Full: { durationDays: 3 } },                   
                     //eventDidMount: yourHandler,
                     //eventContent: yourRenderer,
                     //datesSet: yourDatesSetHandler

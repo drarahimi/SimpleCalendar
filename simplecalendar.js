@@ -2,8 +2,10 @@
 async function loadDependencies() {
     try {
         await loadScript('https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js');
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+        //await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
         await loadScript('https://github.com/yorickshan/html2canvas-pro/releases/download/v1.5.12/html2canvas-pro.min.js');
+        //await loadScript('https://cdn.jsdelivr.net/npm/jspdf-outline/dist/jspdf-outline.min.js');
+        await loadScript('https://unpkg.com/jspdf@latest/dist/jspdf.umd.js');
         if (!window.jspdf || !window.jspdf.jsPDF) {
             throw new Error('jsPDF not loaded correctly');
         }
@@ -36,41 +38,12 @@ function loadScript(url) {
     });
 }
 
-// Format a JS Date (assumed in userTimezone) to YYYY-MM-DD (user zone)
-function formatDateUserZone(date, DateTime, userZone) {
-    if (!date) return '';
-    return DateTime.fromJSDate(date, { zone: userZone }).toFormat('yyyy-MM-dd');
-}
+// // Add days to a JS Date (preserve time) using Luxon in user timezone
+// function addDaysJS(date, days, DateTime, originalZone, userZone) {
+//     console.log(originalZone + '/' + userZone)
+//     return DateTime.fromJSDate(date, { zone: originalZone }).plus({ days }).setZone(userZone).toJSDate();
+// }
 
-// Add days to a JS Date (preserve time) using Luxon in user timezone
-function addDaysJS(date, days, DateTime, userZone) {
-    return DateTime.fromJSDate(date, { zone: userZone }).plus({ days }).toJSDate();
-}
-
-// Compare same day in user's timezone
-function isSameDayUserZone(d1, d2, DateTime, userZone) {
-    const dt1 = DateTime.fromJSDate(d1, { zone: userZone }).startOf('day');
-    const dt2 = DateTime.fromJSDate(d2, { zone: userZone }).startOf('day');
-    return dt1.equals(dt2);
-}
-
-// Convert ISO string from original timezone to a JS Date in user timezone
-function convertISOOriginalToUserJS(isoString, DateTime, originalZone, userZone) {
-    if (!isoString) return null;
-    return DateTime.fromISO(isoString, { zone: originalZone }).setZone(userZone).toJSDate();
-}
-
-// Convert JS Date (in user timezone) -> ISO string in given zone (default user)
-function formatISOInZoneFromJS(date, DateTime, zone) {
-    if (!date) return '';
-    return DateTime.fromJSDate(date, { zone }).toISO({ suppressMilliseconds: true, suppressSeconds: false, includeOffset: false });
-}
-
-// Format long date for PDFs in user zone
-function formatLongDateInZoneFromJS(date, DateTime, zone) {
-    if (!date) return '';
-    return DateTime.fromJSDate(date, { zone }).toFormat('EEEE, LLLL d, yyyy');
-}
 
 /**
  * SimpleCalendar Class (timezone-consistent)
@@ -91,22 +64,71 @@ class SimpleCalendar {
             autoFitEvents: false,
             hourHeightpx: 60,
             nowIndicatorMode: 'anyDay',
-            slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+            slotLabelFormat: 'HH:mm',
+            dayNameFormat: 'ccc d',
+            titleFormat: 'LLLL d, yyyy',
+            titleRangeStartFormat: 'LLL d',
+            titleRangeEndFormat: 'LLL d, yyyy',
+            titleSameMonthYearFormat: 'LLL * yyyy',
+            titleSameMontYearDatesSymbol: '*',
             timeZone: this.userTimezone,
-            visibleRange: null, // interpreted in originalTimezone
-            validRange: null,   // interpreted in originalTimezone
+            validRange: null,
             views: {
                 Day1: { type: 'timeGrid', durationDays: 1, buttonText: '1 Day' },
-                Day3: { type: 'timeGrid', durationDays: 3, buttonText: '3 Days' },
-                Day5: { type: 'timeGrid', durationDays: 5, buttonText: '5 Days' },
-                Day10: { type: 'timeGrid', durationDays: 10, buttonText: '10 Days' }
+                Valid: { type: 'timeGrid', durationDays: 10, buttonText: 'Full' }
             },
             headerToolbar: { left: 'prev,next', center: 'title', right: 'Day1,Day3' },
             allDaySlot: false,
             events: [],
             datesSet: null,
             eventDidMount: null,
-            eventContent: null
+            eventContent: null,
+            pdf: {
+                margin: 15,
+                overlayMargin: 5,
+                overlayOpacity: 0.85,
+                backgroundColor: '#002781',
+                fillColor: '#002781',
+                backgroundUrl: '',
+                logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/IEEE_logo.svg/320px-IEEE_logo.svg.png',
+                maxLogoWidth: 30,
+                maxLogoHeight: 30,
+                longDateFormat: 'EEEE, LLLL d, yyyy (z)',
+                timeLabelFormat: 'HH:mm',
+                footerText: 'Conference',
+                columns: [
+                    { label: 'Time', key: 'timerange', width: 10 },
+                    { label: 'Title', key: 'title', width: 45 },
+                    { label: 'Speaker', key: 'speaker', width: 20 },
+                    { label: 'Moderator', key: 'moderator', width: 15 },
+                    { label: 'Room', key: 'room', width: 10 }
+                ],
+                cover: {
+                    title: "Conference Program",
+                    subtitle: "Scientific Meeting",
+                    extraLines: [
+                        "Hosted by the Research Community",
+                        "Proudly presenting invited speakers"
+                    ],
+                    dates: "May 14 to May 17, 2025",
+                    location: "Vancouver, Canada",
+                },
+                welcome: {
+                    title: "Welcome Message",
+                    message: "Welcome to our scientific meeting. This program gathers researchers and innovators..."
+                },
+                closing: {
+                    title: 'Closing Remarks',
+                    message: 'Thank you for joining us. We appreciate your contribution and hope to see you again at future events.'
+                },
+                committee: {
+                    colGap: 10,
+                    columns: 3,
+                    cardHeight: 35,
+                    list: []
+                }
+            }
+
         }, options);
         //console.log('events in simpleCalendar:');
         //console.log(events);
@@ -120,19 +142,22 @@ class SimpleCalendar {
         // userTimezone fallback: provided param or detect via Intl if luxon missing
         this.userTimezone = this.options.userTimezone || (this.DateTime ? this.DateTime.local().zoneName : Intl.DateTimeFormat().resolvedOptions().timeZone);
 
-        this.initialDate = this.options.initialDate || (this.DateTime ? this.DateTime.local().setZone(this.userTimezone).toFormat('yyyy-MM-dd') : new Date().toISOString().split('T')[0]);
+        this.initialDate = this._parseIsoToLuxon(this.options.initialDate).dt || (this.DateTime ? this.DateTime.local().setZone(this.userTimezone) : new Date().toISOString().split('T')[0]);
 
-        // parse visible/valid ranges into DateTime (original zone) if provided
-        this.visibleRange = this._parseRangeOriginal(this.options.visibleRange);
-        this.validRange = this._parseRangeOriginal(this.options.validRange);
+        // parse valid ranges into DateTime (original zone) if provided
+        this.validRange = this._parseRangeToUser(this.options.validRange);
+        //console.log(this.validRange);       
+
 
         // parse initial view/date -> store currentDate as JS Date in user timezone
         this.currentView = this.options.initialView || 'Day1';
-        this.currentDate = this._convertInitialDateToUserJS(this.options.initialDate);
-
+        this.currentDate = this.initialDate;
+        //console.log(this.currentDate);
         // slot times (minutes)
         this.slotMinMinutes = this._timeStringToMinutes(this.options.slotMinTime);
+        //console.log(this.slotMinMinutes)
         this.slotMaxMinutes = this._timeStringToMinutes(this.options.slotMaxTime);
+        //console.log(this.slotMaxMinutes)
         if (this.slotMaxMinutes <= this.slotMinMinutes) this.slotMaxMinutes = this.slotMinMinutes + 24 * 60;
         this.autoFitEvents = this.options.autoFitEvents;
 
@@ -147,6 +172,27 @@ class SimpleCalendar {
         this.rawEvents = events || this.options.events || [];
         this.events = this._convertEventsToUserZone(this.rawEvents);
 
+        // set Valid duration based on validrange and events
+        // original full duration
+        let duration = this.validRange.end.diff(this.validRange.start, 'days').days;
+
+        // find latest event within the valid range
+        let lastEventEnd = null;
+        this.events.forEach(ev => {
+            //console.log(ev)
+            //console.log(ev.startDate > this.validRange.start && ev.endDate < this.validRange.end)
+            if (ev.startDate > this.validRange.start && ev.endDate < this.validRange.end) {
+                if (!lastEventEnd || ev.endDate > lastEventEnd) {
+                    lastEventEnd = ev.endDate;
+                }
+            }
+        });
+        if (lastEventEnd) {
+            // duration from start to last event's end
+            duration = Math.ceil(lastEventEnd.diff(this.validRange.start, 'days').days);
+        }
+        this.options.views['Valid'].durationDays = duration;
+
         // jsPDF and html2canvas will be bound at runtime if present
         this.jsPDF = (typeof window !== 'undefined' && window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : null;
         this.html2canvas = (typeof window !== 'undefined' && window.html2canvas) ? window.html2canvas : null;
@@ -159,43 +205,53 @@ class SimpleCalendar {
 
     // ---- Helper / parsing ----
 
+    _parseIsoToLuxon(isoString) {
+        if (!isoString) return null;
+
+        const dt = this.DateTime.fromISO(isoString, { zone: this.originalTimezone }).setZone(this.userTimezone);
+
+        return {
+            dt,
+            start: dt.startOf('day'),
+            end: dt.endOf('day')
+        };
+    }
+    // Format a Luxon Date (assumed in userTimezone) to YYYY-MM-DD (user zone)
+    _luxonToIso(date) {
+        if (!date) return '';
+        return date.toFormat('yyyy-MM-dd');
+    }
+
+    _normalizeIsoString(isoString, isStart) {
+        if (!isoString) return null;
+        // Add time if missing
+        if (!isoString.includes('T')) {
+            isoString = isStart ? `${isoString}T00:00:00` : `${isoString}T23:59:59.999`;
+        }
+        return isoString;
+    }
+
     // Parse visible/valid range into objects with DateTime in original timezone
-    _parseRangeOriginal(range) {
+    _parseRangeToUser(range) {
         if (!range) return null;
         const out = {};
         if (range.start) {
-            // treat start as start of day in original timezone
-            out.start = this.DateTime.fromISO(range.start, { zone: this.originalTimezone }).startOf('day');
+            out.start = this._parseIsoToLuxon(this._normalizeIsoString(range.start, true)).start;
         } else {
             out.start = null;
         }
         if (range.end) {
-            // treat end as end-of-day in original timezone (we'll use exclusive end)
-            out.end = this.DateTime.fromISO(range.end, { zone: this.originalTimezone }).endOf('day');
+            out.end = this._parseIsoToLuxon(this._normalizeIsoString(range.end, false)).end;
         } else {
             out.end = null;
         }
+        // console.log(range.start)
+        // console.log(this._normalizeIsoString(range.start, true))
+        // console.log(out.start.toISO())
+        // console.log(range.end)
+        // console.log(this._normalizeIsoString(range.end, false))
+        // console.log(out.end.toISO())
         return out;
-    }
-
-    // convert initial ISO-like date (YYYY-MM-DD or ISO) into JS Date in user timezone
-    _convertInitialDateToUserJS(iso) {
-        if (!iso) return new Date();
-        // if simple YYYY-MM-DD -> start of day in user timezone
-        if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) {
-            if (this.DateTime) {
-                return this.DateTime.fromISO(iso, { zone: this.userTimezone }).startOf('day').toJSDate();
-            } else {
-                // fallback: naive JS Date at midnight (browser local) then treat as user timezone
-                return new Date(iso + 'T00:00:00');
-            }
-        }
-        // otherwise treat as ISO in original timezone then convert to user timezone
-        if (this.DateTime) {
-            return this.DateTime.fromISO(iso, { zone: this.originalTimezone }).setZone(this.userTimezone).toJSDate();
-        } else {
-            return new Date(iso);
-        }
     }
 
     // Convert raw events (start/end in original timezone ISO strings) to event objects with both original DateTimes and user JS Dates
@@ -204,38 +260,25 @@ class SimpleCalendar {
         return (events || []).map(ev => {
             const originalStartDT = this.DateTime.fromISO(ev.start, { zone: this.originalTimezone });
             const originalEndDT = this.DateTime.fromISO(ev.end, { zone: this.originalTimezone });
-            const startUserJS = originalStartDT.setZone(this.userTimezone).toJSDate();
-            const endUserJS = originalEndDT.setZone(this.userTimezone).toJSDate();
+            const startUser = originalStartDT.setZone(this.userTimezone);
+            const endUser = originalEndDT.setZone(this.userTimezone);
 
             return Object.assign({}, ev, {
                 _originalStartDT: originalStartDT,
                 _originalEndDT: originalEndDT,
-                startDate: startUserJS, // JS Date used for rendering/layout (in user timezone)
-                endDate: endUserJS
+                startDate: startUser, // Luxon Date used for rendering/layout (in user timezone)
+                endDate: endUser
             });
         });
     }
 
     //A perfect user facing string uses the zone plus its current offset. Uses Luxon since your project already loads it.
-    _friendlyTzWithOffset(tz) {
-        const dt = luxon.DateTime.now().setZone(tz);
+    _friendlyTimeZoneWithOffset() {
+        const dt = luxon.DateTime.now().setZone(this.userTimezone);
         const offset = dt.offset / 60;
         const offsetText = offset >= 0 ? "UTC+" + offset : "UTC" + offset;
-        const name = tz.split("/").pop().replace('_', ' ');
+        const name = dt.toFormat('z');// this.userTimezone.split("/").pop().replace('_', ' ');
         return "" + name + " (" + offsetText + ")";
-    }
-
-    // For range comparisons: convert a JS date (assumed in user timezone) to a DateTime in original timezone (startOf day)
-    _toOriginalZoneDT_fromUserJSStartOfDay(jsDate) {
-        if (!this.DateTime) return DateTime.fromJSDate(jsDate).startOf('day');
-        const dtUser = this.DateTime.fromJSDate(jsDate, { zone: this.userTimezone }).startOf('day');
-        return dtUser.setZone(this.originalTimezone).startOf('day');
-    }
-
-    _toOriginalZoneDT_fromUserJSEndOfDay(jsDate) {
-        if (!this.DateTime) return DateTime.fromJSDate(jsDate).endOf('day');
-        const dtUser = this.DateTime.fromJSDate(jsDate, { zone: this.userTimezone }).endOf('day');
-        return dtUser.setZone(this.originalTimezone).endOf('day');
     }
 
     _timeStringToMinutes(t) {
@@ -244,34 +287,46 @@ class SimpleCalendar {
         return (parts[0] || 0) * 60 + (parts[1] || 0);
     }
 
-    _clampDateToValidRangeUserJS(jsDate) {
-        if (!this.validRange || !this.DateTime) return jsDate;
-        // convert user jsDate to original zone DT startOf day for comparison
-        const candidateOriginalDayStart = this._toOriginalZoneDT_fromUserJSStartOfDay(jsDate);
-        let clampedOriginal = candidateOriginalDayStart;
+    // Format long date for PDFs in user zone
+    _formatLongDate(date) {
+        if (!date) return '';
+        return date.toFormat(this.options.pdfLongDateFormat);
+    }
+    // Compare same day in user's timezone
+    _isSameDay(d1, d2) {
+        const dt1 = d1.setZone(this.userTimezone).startOf('day');
+        const dt2 = d2.setZone(this.userTimezone).startOf('day');
+        return dt1.equals(dt2);
+    }
 
-        if (this.validRange.start && clampedOriginal < this.validRange.start) {
-            clampedOriginal = this.validRange.start;
+    _clampDateToValidRange(Date) {
+        if (!this.validRange || !this.DateTime) return Date;
+        const candidateDayStart = Date.startOf('day');
+        let clamped = candidateDayStart;
+
+        if (this.validRange.start && clamped < this.validRange.start) {
+            clamped = this.validRange.start;
         }
-        if (this.validRange.end && clampedOriginal > this.validRange.end) {
-            clampedOriginal = this.validRange.end;
+        if (this.validRange.end && clamped > this.validRange.end) {
+            clamped = this.validRange.end;
         }
         // convert clampedOriginal (original zone DateTime) back to user JS Date at its startOf('day') in user zone
-        const asUser = clampedOriginal.setZone(this.userTimezone).startOf('day').toJSDate();
+        const asUser = clamped.setZone(this.userTimezone).startOf('day');
         return asUser;
     }
 
     // Auto-fit slotMin and slotMax based on events in current view
     _autoFitSlotTimes(eventsByDay) {
         if (!eventsByDay || Object.keys(eventsByDay).length === 0) return;
-
+        //console.log(eventsByDay)
         let minMinutes = 24 * 60; // start with max possible
         let maxMinutes = 0;        // start with min possible
 
         Object.values(eventsByDay).forEach(dayEvents => {
             dayEvents.forEach(event => {
-                const startDT = this.DateTime.fromJSDate(event.dayStart, { zone: this.userTimezone });
-                const endDT = this.DateTime.fromJSDate(event.dayEnd, { zone: this.userTimezone });
+                //console.log(event)
+                const startDT = event.dayStart;
+                const endDT = event.dayEnd;
                 const startMinutes = startDT.hour * 60 + startDT.minute;
                 const endMinutes = endDT.hour * 60 + endDT.minute;
 
@@ -308,66 +363,75 @@ class SimpleCalendar {
         this.render();
     }
 
-    // setView(viewName) {
-    //     if (viewName === 'Full' && this.options.views?.Full) {
-    //         this.currentView = 'Full';
-    //     } else {
-    //         this.currentView = 'day';
-    //     }
-    //     this.render();
-    //     this._callDatesSet();
-    // }
     setView(viewName) {
         if (this.options.views[viewName]) {
             this.currentView = viewName;
+            //console.log(viewName);
         } else {
             this.currentView = Object.keys(this.options.views)[0];
         }
         this.render();
-        this._callDatesSet();
+        //this._callDatesSet();
     }
 
     changeDate(days) {
+        //console.info(`change dates clicked(${days} days)`);
         // days relative shift in user timezone
-        const next = addDaysJS(this.currentDate, days, this.DateTime, this.userTimezone);
+        //console.info('current day is:');
+        //console.info(this.currentDate.toISO());
+        const next = this.currentDate.plus({ days });
+        //console.info('next day is:');
+        //console.info(next.toISO());
         // clamp to validRange if present (validRange interpreted in original timezone)
-        const clamped = this._clampDateToValidRangeUserJS(next);
+        const clamped = this._clampDateToValidRange(next);
         this.currentDate = clamped;
-
-        // if visibleRange present, ensure we don't navigate outside it (visibleRange in original timezone)
-        if (this.visibleRange && this.DateTime) {
-            const candidateOriginal = this._toOriginalZoneDT_fromUserJSStartOfDay(this.currentDate);
-            if (this.visibleRange.start && candidateOriginal < this.visibleRange.start) {
-                // move to visibleRange.start but convert to user js date
-                this.currentDate = this.visibleRange.start.setZone(this.userTimezone).startOf('day').toJSDate();
+        //console.info(this.validRange.end.toISO());
+        // if validRange present, ensure we don't navigate outside it (validRange in user timezone)
+        if (this.validRange && this.DateTime) {
+            const candidate = this.currentDate;
+            if (this.validRange.start && candidate.startOf('day') < this.validRange.start) {
+                this.currentDate = this.validRange.start;
             }
-            if (this.visibleRange.end && candidateOriginal > this.visibleRange.end) {
-                this.currentDate = this.visibleRange.end.setZone(this.userTimezone).startOf('day').toJSDate();
+            if (this.validRange.end && candidate.endOf('day') > this.validRange.end) {
+                this.currentDate = this.validRange.end;
             }
         }
 
         this.render();
-        this._callDatesSet();
+        //this._callDatesSet();
     }
 
-    gotoDate(iso) {
-        this.currentDate = this._convertInitialDateToUserJS(iso);
-        // clamp
-        this.currentDate = this._clampDateToValidRangeUserJS(this.currentDate);
-        this.render();
-        this._callDatesSet();
-    }
+    // gotoDate(iso) {
+    //     this.currentDate = this._convertInitialDateToUserJS(iso);
+    //     // clamp
+    //     this.currentDate = this._clampDateToValidRangeUserJS(this.currentDate);
+    //     this.render();
+    //     //this._callDatesSet();
+    // }
 
     // Return list of JS Date objects (start-of-day in user timezone) for current view
     getDatesForView() {
         const dayCount = this.options.views[this.currentView]?.durationDays || 1;
         const dates = [];
-        // base DateTime in user timezone for currentDate start-of-day
-        const baseDT = this.DateTime.fromJSDate(this.currentDate, { zone: this.userTimezone }).startOf('day');
+
+        const validStart = this.validRange.start;
+        const validEnd = this.validRange.end;
+        // Base date
+        let baseDT = this.currentDate.startOf('day');
+
+        // Clamp baseDT to valid range
+        if (baseDT < validStart) baseDT = validStart;
+        //console.log(baseDT < validStart);
+        const latestAllowedStart = validEnd.startOf('day').minus({ days: dayCount - 1 }).startOf('day');
+        //console.info('baseDT in getdateforview')
+        //console.log(baseDT.toISO() + '/' + latestAllowedStart.toISO())
+        if (baseDT > latestAllowedStart) baseDT = latestAllowedStart;
+        //console.log(baseDT > latestAllowedStart);
         for (let i = 0; i < dayCount; i++) {
-            const d = baseDT.plus({ days: i }).toJSDate();
+            let d = baseDT.plus({ days: i });
             dates.push(d);
         }
+        //console.log(dates);
         return dates;
     }
 
@@ -375,21 +439,20 @@ class SimpleCalendar {
     getEventsForView(dates) {
         const eventsByDay = {};
         dates.forEach(date => {
-            eventsByDay[formatDateUserZone(date, this.DateTime, this.userTimezone)] = [];
+            eventsByDay[this._luxonToIso(date)] = [];
         });
-
         this.events.forEach(event => {
             dates.forEach(date => {
-                const dayKey = formatDateUserZone(date, this.DateTime, this.userTimezone);
+                const dayKey = this._luxonToIso(date);
 
                 // day start & end in user timezone
-                const dayStartDT = this.DateTime.fromJSDate(date, { zone: this.userTimezone }).startOf('day');
+                const dayStartDT = date.startOf('day');
                 const dayStartMS = dayStartDT.toMillis();
                 const dayEndMS = dayStartDT.plus({ days: 1 }).toMillis();
 
                 // event start/end are stored as JS Date in user timezone (startDate/endDate)
-                const eventStartMS = this.DateTime.fromJSDate(event.startDate, { zone: this.userTimezone }).toMillis();
-                const eventEndMS = this.DateTime.fromJSDate(event.endDate, { zone: this.userTimezone }).toMillis();
+                const eventStartMS = event.startDate.toMillis();
+                const eventEndMS = event.endDate.toMillis();
 
                 //console.log(`date: ${dayKey}\nday start: ${this.DateTime.fromMillis(dayStartMS, { zone:this.userTimezone }).toISO()}\nday end:${this.DateTime.fromMillis(dayEndMS, { zone:this.userTimezone }).toISO()}\nevent: ${event.title}\nevent start: ${this.DateTime.fromMillis(eventStartMS, { zone:this.userTimezone }).toISO()}\nevent end: ${this.DateTime.fromMillis(eventEndMS, { zone:this.userTimezone }).toISO()}`);
 
@@ -404,10 +467,10 @@ class SimpleCalendar {
                     if (adjustedStartMS < adjustedEndMS) {
                         eventsByDay[dayKey].push({
                             ...event,
-                            dayStart: new Date(adjustedStartMS),
-                            dayEnd: new Date(adjustedEndMS),
-                            originalStart: event._originalStartDT ? event._originalStartDT.toJSDate() : event.startDate,
-                            originalEnd: event._originalEndDT ? event._originalEndDT.toJSDate() : event.endDate
+                            dayStart: this.DateTime.fromMillis(adjustedStartMS, { zone: this.userTimezone }),
+                            dayEnd: this.DateTime.fromMillis(adjustedEndMS, { zone: this.userTimezone }),
+                            originalStart: event._originalStartDT ? event._originalStartDT : event.startDate,
+                            originalEnd: event._originalEndDT ? event._originalEndDT : event.endDate
                         });
                     }
                 }
@@ -424,11 +487,12 @@ class SimpleCalendar {
     calculateEventLayout(events) {
         // Step 1: compute top and height
         events.forEach(event => {
-            const startOfDayDT = this.DateTime.fromJSDate(event.dayStart, { zone: this.userTimezone }).startOf('day');
+            const startOfDayDT = event.dayStart.startOf('day');
             const startOfDayMS = startOfDayDT.toMillis();
 
-            const startMinutes = (event.dayStart.getTime() - (startOfDayMS + this.slotMinMinutes * MS_PER_MINUTE)) / MS_PER_MINUTE;
-            const endMinutes = (event.dayEnd.getTime() - (startOfDayMS + this.slotMinMinutes * MS_PER_MINUTE)) / MS_PER_MINUTE;
+            // startOfDayMS is still a timestamp in ms (could also be Luxon DateTime)
+            const startMinutes = (event.dayStart.toMillis() - (startOfDayMS + this.slotMinMinutes * MS_PER_MINUTE)) / MS_PER_MINUTE;
+            const endMinutes = (event.dayEnd.toMillis() - (startOfDayMS + this.slotMinMinutes * MS_PER_MINUTE)) / MS_PER_MINUTE;
             const durationMinutes = endMinutes - startMinutes;
 
             event.top = (startMinutes / this.visibleMinutes) * this.DAY_HEIGHT_PX;
@@ -492,13 +556,6 @@ class SimpleCalendar {
 
         // apply classes for view
         this.viewEl.className = this.viewEl.className.replace(/sc-day-view|sc-three-day-view/g, '').trim();
-        // if (this.currentView === 'day') {
-        //     this.viewEl.classList.add('sc-day-view');
-        //     this.renderDayView();
-        // } else {
-        //     this.viewEl.classList.add('sc-three-day-view');
-        //     this.renderThreeDayView();
-        // }
         const dayCount = this.options.views[this.currentView]?.durationDays || 1;
 
         this.viewEl.classList.add('sc-multi-day-view');
@@ -511,18 +568,44 @@ class SimpleCalendar {
         const startDate = dates[0];
         const endDate = dates[dates.length - 1];
 
-        const viewTitle = this._formatViewTitleUserZone(startDate, endDate);
+        const viewTitle = this._formatViewTitle(startDate, endDate);
 
         const leftButtons = this.options.headerToolbar?.left || 'prev,next';
         const center = this.options.headerToolbar?.center || 'title';
         const rightButtons = this.options.headerToolbar?.right || 'Day1,Day3,Day5,Day10';
+        //console.log(this);
+        // Assume you already have these
+        const dayCount = dates.length; // number of days in current view
+        const validStart = this.validRange.start;
+        const validEnd = this.validRange.end;
+        const baseDT = this.currentDate.startOf('day');
 
+        // Compute the latest allowed start to keep the whole span in range
+        const latestAllowedStart = validEnd.minus({ days: dayCount - 1 }).startOf('day');
+        //console.log(baseDT.toISO() + '/' + latestAllowedStart.toISO())
+        // Determine if prev/next should be enabled
+        const prevEnabled = baseDT > validStart;
+        const nextEnabled = baseDT < latestAllowedStart;
+        //console.log(prevEnabled + '/' + nextEnabled)
+        // Render buttons
         const leftHtml = leftButtons.includes('prev')
-            ? `<button onclick="window.calendar.changeDate(-${dates.length})" class="p-2 rounded-lg hover:bg-gray-400 transition ease-in-out duration-300"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M11.354 1.646 L5.354 7.646 L11.354 13.646" stroke="currentColor" stroke-width="2" fill="none" /></svg></button>`
+            ? `<button onclick="window.calendar.changeDate(-${dayCount})" 
+              class="p-2 rounded-lg transition ease-in-out duration-300 
+              ${prevEnabled ? 'text-black hover:bg-gray-400' : 'text-gray-300 cursor-not-allowed'}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M11.354 1.646 L5.354 7.646 L11.354 13.646" stroke="currentColor" stroke-width="2" fill="none" />
+          </svg>
+      </button>`
             : '';
 
         const leftHtml2 = leftButtons.includes('next')
-            ? `<button onclick="window.calendar.changeDate(${dates.length})" class="p-2 rounded-lg hover:bg-gray-400 transition ease-in-out duration-300"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class="ms-auto"><path d="M4.646 1.646 L10.646 7.646 L4.646 13.646" stroke="currentColor" stroke-width="2" fill="none" /></svg></button>`
+            ? `<button onclick="window.calendar.changeDate(${dayCount})" 
+              class="p-2 rounded-lg  transition ease-in-out duration-300 
+              ${nextEnabled ? 'text-black hover:bg-gray-400' : 'text-gray-300 cursor-not-allowed'}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M4.646 1.646 L10.646 7.646 L4.646 13.646" stroke="currentColor" stroke-width="2" fill="none" />
+          </svg>
+      </button>`
             : '';
 
         // Dynamic right side view buttons
@@ -542,9 +625,6 @@ class SimpleCalendar {
                 return;
             }
         });
-        //const userTz = this.userTimezone;
-        //const offsetMinutes = new Date().getTimezoneOffset() * -1;
-        //const offsetHours = offsetMinutes / 60;
         this.headerEl.innerHTML = `
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full no-print space-y-2 sm:space-y-0 sm:space-x-4">
             <!-- Title row -->
@@ -553,7 +633,7 @@ class SimpleCalendar {
                     ${viewTitle}
                 </span>
                 <span class="text-sm text-gray-600 truncate">
-                    ${this._friendlyTzWithOffset(this.userTimezone)}
+                    ${this._friendlyTimeZoneWithOffset()}
                 </span>
             </div>
             <!-- Navigation row -->
@@ -608,40 +688,48 @@ class SimpleCalendar {
 
 
     // Format header/title based on user zone dates
-    _formatViewTitleUserZone(startDateJS, endDateJS) {
-        const dtStart = this.DateTime.fromJSDate(startDateJS, { zone: this.userTimezone });
-        const dtEnd = this.DateTime.fromJSDate(endDateJS, { zone: this.userTimezone });
+    _formatViewTitle(startDate, endDate) {
+        // Assume startDate and endDate are Luxon DateTime objects in userTimezone
 
-        if (dtStart.toMillis() === dtEnd.toMillis()) {
-            return dtStart.toFormat('LLLL d, yyyy');
+        if (startDate.toMillis() === endDate.toMillis()) {
+            return startDate.toFormat(this.options.titleFormat);
         }
-        const sameMonth = dtStart.month === dtEnd.month;
-        const sameYear = dtStart.year === dtEnd.year;
+
+        const sameMonth = startDate.month === endDate.month;
+        const sameYear = startDate.year === endDate.year;
+
         if (sameMonth && sameYear) {
-            return `${dtStart.toFormat('LLL')} ${dtStart.day}-${dtEnd.day}, ${dtStart.year}`;
+            return `${startDate.toFormat('LLL *, yyyy')}`.replace(this.options.titleSameMontYearDatesSymbol, `${startDate.day}-${endDate.day}`);
         }
-        return `${dtStart.toFormat('LLL d')} - ${dtEnd.toFormat('LLL d, yyyy')}`;
+
+        return `${startDate.toFormat(this.options.titleRangeStartFormat)} - ${endDate.toFormat(this.options.titleRangeEndFormat)}`;
     }
+
 
     renderMultiDayView() {
         const dates = this.getDatesForView();
-        const eventsByDay = this.getEventsForView(dates);
         // Auto-fit slot min/max to visible events
-        if (this.options.autoFitEvents && this.searchEl.value.length === 0)
+        if (this.options.autoFitEvents && this.searchEl.value.length === 0) {
+            this.slotMinMinutes = 0; // start with max possible
+            this.slotMaxMinutes = 24 * 60;        // start with min possible
+            const eventsByDay = this.getEventsForView(dates);
             this._autoFitSlotTimes(eventsByDay);
+        }
         else {
             this.slotMinMinutes = this._timeStringToMinutes(this.options.slotMinTime);
             this.slotMaxMinutes = this._timeStringToMinutes(this.options.slotMaxTime);
         }
+        const eventsByDay = this.getEventsForView(dates);
 
         let columnHeaders = `<div class="grid sc-time-grid border-b border-gray-200 sticky top-0 bg-white z-20" style="grid-template-columns: 50px repeat(${dates.length}, minmax(0, 1fr));">`;
         columnHeaders += '<div class="col-span-1 border-r border-gray-100 p-2 text-sm text-center bg-gray-50">Time</div>';
 
         dates.forEach(date => {
-            const dayKey = formatDateUserZone(date, this.DateTime, this.userTimezone);
-            const isToday = isSameDayUserZone(date, new Date(), this.DateTime, this.userTimezone);
+            const dayKey = this._luxonToIso(date);
+            const isToday = this._isSameDay(date, this.DateTime.now());
+            //console.log(`is today: ${isToday}`)
             columnHeaders += `<div class="col-span-1 p-2 text-sm text-center font-semibold ${isToday ? 'text-primary bg-blue-100' : 'text-gray-700 bg-gray-50'} border-r border-gray-100">
-                ${this.DateTime.fromJSDate(date, { zone: this.userTimezone }).toFormat('ccc d')}
+                ${date.toFormat(this.options.dayNameFormat)}
             </div>`;
             eventsByDay[dayKey] = this.calculateEventLayout(eventsByDay[dayKey] || []);
         });
@@ -649,9 +737,9 @@ class SimpleCalendar {
 
         let dayContent = '';
         dates.forEach(date => {
-            const dayKey = formatDateUserZone(date, this.DateTime, this.userTimezone);
+            const dayKey = this._luxonToIso(date);
             const dayEvents = eventsByDay[dayKey] || [];
-            const dayName = this.DateTime.fromJSDate(date, { zone: this.userTimezone }).toFormat('ccc d');
+            const dayName = date.toFormat(this.options.dayNameFormat);
             dayContent += this.renderDayContainer(dayName, dayEvents, 'col-span-1');
         });
         //console.log(dates.length);
@@ -676,8 +764,8 @@ class SimpleCalendar {
         const endHour = Math.ceil(this.slotMaxMinutes / 60);
         for (let h = startHour; h <= endHour; h++) {
             // build a DateTime at hour h on an arbitrary day in user timezone for consistent formatting
-            const dt = this.DateTime.fromJSDate(this.currentDate, { zone: this.userTimezone }).set({ hour: h, minute: 0, second: 0, millisecond: 0 });
-            const hourDisplay = dt.toLocaleString(this.options.slotLabelFormat || { hour: '2-digit', minute: '2-digit', hour12: false });
+            const dt = this.currentDate.set({ hour: h, minute: 0, second: 0, millisecond: 0 });
+            const hourDisplay = dt.toFormat(this.options.slotLabelFormat);
             html += `<div class="sc-hour-label text-xs text-gray-500" style="height: ${this.hourHeightPx}px; line-height: ${this.hourHeightPx}px;">${hourDisplay}</div>`;
         }
         html += `</div>`;
@@ -699,8 +787,8 @@ class SimpleCalendar {
         html += `<div class="sc-time-slot-line-hour absolute w-full" style="top: ${this.DAY_HEIGHT_PX}px; ${linesColSpan}"></div>`;
 
         if (this.options.nowIndicator && sampleDay && this.DateTime) {
-            const nowDT = this.DateTime.local().setZone(this.userTimezone);
-            const sampleDayDT = this.DateTime.fromJSDate(sampleDay, { zone: this.userTimezone }).startOf('day');
+            const nowDT = this.DateTime.now().setZone(this.userTimezone);
+            const sampleDayDT = sampleDay.startOf('day');
             let minutesSinceStart;
 
             if (this.options.nowIndicatorMode === 'currentDay') {
@@ -726,9 +814,9 @@ class SimpleCalendar {
                 // horizontal line
                 html += `<div class="sc-now-slot-line absolute w-full" style="top: ${top}px; ${linesColSpanHalfHour};"></div>`;
                 const triSvg = `<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <rect width="16" height="16" fill="none"></rect>
-    <polygon points="13,8 5,16 5,0" fill="currentColor" stroke="currentColor" stroke-width="1"></polygon>
-</svg>`;
+                                    <rect width="16" height="16" fill="none"></rect>
+                                    <polygon points="13,8 5,16 5,0" fill="currentColor" stroke="currentColor" stroke-width="1"></polygon>
+                                </svg>`;
                 // small triangle
                 html += `<div class="sc-now-slot-line-triangle absolute" style="top: ${top - 7}px;">${triSvg}</div>`;
             }
@@ -737,7 +825,7 @@ class SimpleCalendar {
         return html;
     }
 
-    getContrastForeColor(color) {
+    _getContrastForeColor(color) {
         let r, g, b;
 
         if (color.startsWith("#")) {
@@ -771,13 +859,13 @@ class SimpleCalendar {
         return luminance > 0.7 ? "black" : "white";
     }
     // Function to check if the value is a valid hex color
-    isHexColor(value) {
+    _isHexColor(value) {
         // Hex color regex (handles 6 or 3 digit hex colors with or without a leading '#')
         const hexPattern = /^#?([0-9A-Fa-f]{3}){1,2}$/;
         return hexPattern.test(value);
     }
     // Function to get hex value from either color name or hex input
-    getHexColor(value) {
+    _getHexColor(value) {
         if (isHexColor(value)) {
             return value.startsWith("#") ? value : "#" + value; // Ensure hex has a leading '#'
         }
@@ -805,7 +893,7 @@ class SimpleCalendar {
 
         events.forEach(event => {
             const eventColor = event.color || '#4098fdff';
-            const eventTextColor = event.textColor || this.getContrastForeColor(eventColor);
+            const eventTextColor = event.textColor || this._getContrastForeColor(eventColor);
             const eventTitle = event.title || '';
             const eventSubtitle = event.subtitle || '';
             const eventNote = event.note || '';
@@ -830,8 +918,8 @@ class SimpleCalendar {
             const presenterHtml = hasSpeaker ? `<span style="display:inline-flex; align-items:center">${presenterSVg} <span>${event.details.speaker}</span></span>` : '';
 
             // Format start/end times in user timezone using Luxon
-            const start = this.DateTime.fromJSDate(event.dayStart, { zone: this.userTimezone });
-            const end = this.DateTime.fromJSDate(event.dayEnd, { zone: this.userTimezone });
+            const start = event.dayStart;
+            const end = event.dayEnd;
             const startTime = start.toFormat('HH:mm');
             const endTime = end.toFormat('HH:mm');
 
@@ -916,38 +1004,6 @@ class SimpleCalendar {
         this.searchEl.addEventListener('input', this._searchHandler);
     }
 
-    _callDatesSet() {
-        if (typeof this.options.datesSet !== 'function') return;
-        const dates = this.getDatesForView();
-
-        const info = {
-            view: { type: (this.currentView || 'Day1') },
-            // start & end strings should be formatted in user timezone for display, but represent true day boundaries
-            startStr: formatISOInZoneFromJS(dates[0], this.DateTime, this.userTimezone),
-            endStr: formatISOInZoneFromJS(addDaysJS(dates[dates.length - 1], 1, this.DateTime, this.userTimezone), this.DateTime, this.userTimezone)
-        };
-
-        // If Full view and out of visibleRange, reset to initial
-        if (this.options.views.Full && this.visibleRange && info.view.type === 'Full') {
-            const startISO = info.startStr.split('T')[0];
-            const visibleStartUserJS = this.visibleRange.start ? this.visibleRange.start.setZone(this.userTimezone).toFormat('yyyy-MM-dd') : null;
-            if (this.visibleRange.start && startISO !== visibleStartUserJS && !this._resetting) {
-                this._resetting = true;
-                console.log(`${info.startStr}-${info.endStr} 3day view out of range, resetting`);
-                const gotoIso = this.options.visibleRange?.start ? this.options.visibleRange.start : this.options.initialDate;
-                this.gotoDate(gotoIso);
-                this._resetting = false;
-                return;
-            }
-        }
-
-        try {
-            this.options.datesSet(info);
-        } catch (err) {
-            console.warn('datesSet handler threw', err);
-        }
-    }
-
     _attachEventMountHandlers() {
         const eventEls = this.viewEl.querySelectorAll('.sc-event-box');
         eventEls.forEach(el => {
@@ -1028,6 +1084,17 @@ class SimpleCalendar {
     htmlToText(html) {
         const temp = document.createElement('div');
         temp.innerHTML = html;
+
+        // Replace <br> with newline
+        temp.querySelectorAll('br').forEach(br => {
+            br.replaceWith('\n');
+        });
+
+        // Optionally, add newline after block elements (p, div, li)
+        temp.querySelectorAll('p, div, li').forEach(el => {
+            el.appendChild(document.createTextNode('\n'));
+        });
+
         return temp.textContent || temp.innerText || '';
     }
 
@@ -1059,6 +1126,7 @@ class SimpleCalendar {
             let heightLeft = imgHeight;
 
             const pdf = new jsPDF('p', 'mm', 'a4');
+            pdf.setDisplayMode(1, 'single', 'UseOutlines');
             let position = 0;
             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
             heightLeft -= pageHeight;
@@ -1084,91 +1152,540 @@ class SimpleCalendar {
         }
     }
 
+    _hexToRgb(hex) {
+        // Remove '#' if present
+        hex = hex.replace(/^#/, '');
+        if (hex.length === 3) {
+            hex = hex.split('').map(c => c + c).join('');
+        }
+        const bigint = parseInt(hex, 16);
+        return {
+            r: (bigint >> 16) & 255,
+            g: (bigint >> 8) & 255,
+            b: bigint & 255
+        };
+    }
+
+    _generatePalette(baseRgb, count = 5) {
+        // clamp helper
+        const clamp = v => Math.max(0, Math.min(255, v));
+
+        const variations = [];
+
+        for (let i = 0; i < count; i++) {
+            const factor = (i - (count - 1) / 2) / ((count - 1) / 2);
+
+            // factor ranges from negative to positive
+            // negative makes darker, positive makes lighter
+            const amount = factor * 30; // adjust 30 to control strength
+
+            variations.push({
+                r: clamp(baseRgb.r + amount),
+                g: clamp(baseRgb.g + amount),
+                b: clamp(baseRgb.b + amount)
+            });
+        }
+
+        return variations;
+    }
+
     async generateProgramPdf() {
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const margin = 15;
+        const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+        pdf.setDisplayMode('fullheight', 'continuous', 'UseOutlines');
+        const margin = this.options.pdf.margin || 15;
+        const overlayMargin = this.options.pdf.overlayMargin || 5;
+        const overlayOpacity = this.options.pdf.overlayOpacity || 0.85;
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+        const innerW = pageW - margin * 2;
+        const maxLogoW = this.options.pdf.maxLogoWidth || 30;
+        const maxLogoH = this.options.pdf.maxLogoHeight || 30;
         let y = margin;
 
-        const title = 'Conference Program';
-        const welcomeNote = `Welcome to our scientific meeting. We are pleased to present a program that brings together researchers, educators, and innovators. We hope you enjoy the sessions, exchange ideas, and build collaborations.`;
-        const closingNote = `Thank you for participating. We appreciate your contributions and hope to see you at future events.`;
+        // Load background
+        let bg = null;
+        if (this.options.pdf.backgroundUrl) {
+            bg = await this._loadImageAsBase64(this.options.pdf.backgroundUrl);
+        }
+        // Add Bookmark for PDF Outline
+        const addBookmark = (title, parent = null) => {
+            // Get the current page number
+            const pageIndex = pdf.internal.getNumberOfPages();
 
-        pdf.setFontSize(22);
-        pdf.text(title, margin, y);
-        y += 15;
+            //console.log(`${title} -> # ${pageIndex}`);
 
-        pdf.setFontSize(12);
-        const welcomeLines = pdf.splitTextToSize(welcomeNote, 180);
-        pdf.text(welcomeLines, margin, y);
+            // Create a destination object with pageNumber and y-coordinate (e.g., top of the page, 0)
+            // Note: The y-coordinate might be ignored by some viewers, but page number should work.
+            const destination = {
+                pageNumber: pageIndex,
+                y: 0 // You can specify a y position, e.g., 0 for top of the page
+            };
+
+            // Add the bookmark using the destination object
+            pdf.outline.add(parent, title, destination);
+        };
+        // Draw background
+        // Helper function for random number generation
+        const getRandom = (min, max) => Math.random() * (max - min) + min;
+
+        // Define a modern, harmonious color palette (e.g., professional blues, grays, and a pop of accent color)
+        var fillColor = this._hexToRgb(this.options.pdf.fillColor);
+        const palette = this._generatePalette(fillColor, 15);
+
+        const drawBackground = () => {
+            // 1. Draw the base page background color
+            const baseColor = this._hexToRgb(this.options.pdf.backgroundColor);
+            pdf.setFillColor(baseColor.r, baseColor.g, baseColor.b);
+            pdf.rect(0, 0, pageW, pageH, 'F');
+
+            // Reset opacity to 1 before adding images or overlay
+            pdf.setGState(pdf.GState({ opacity: 1 }));
+
+            if (bg) {
+                // Add optional background image on top of the shapes if needed
+                pdf.addImage(bg, 'JPEG', 0, 0, pageW, pageH);
+            }
+
+
+            // 2. Add random, harmonious geometric shapes
+            const numShapes = 15; // Number of shapes to draw
+            for (let i = 0; i < numShapes; i++) {
+                // Select a random color from the palette
+                const color = palette[Math.floor(Math.random() * palette.length)];
+                pdf.setFillColor(color.r, color.g, color.b);
+
+                // Set a low opacity so they blend into the background (e.g., 0.1 to 0.4)
+                const shapeOpacity = getRandom(0.1, 0.4);
+                pdf.setGState(pdf.GState({ opacity: shapeOpacity }));
+
+                // Random position and size
+                const x = getRandom(0, pageW);
+                const y = getRandom(0, pageH);
+                const width = getRandom(20, 150);
+                const height = getRandom(20, 150);
+
+                // Draw a rectangle or a square randomly
+                if (Math.random() > 0.5) {
+                    pdf.rect(x, y, width, height, 'F'); // Filled rectangle
+                } else {
+                    pdf.rect(x, y, Math.min(width, height), Math.min(width, height), 'F'); // Square
+                }
+            }
+
+        };
+
+        // White translucent overlay
+        const drawOverlay = () => {
+            // setGState usage depends on your jsPDF build; this matches your earlier usage
+            try {
+                pdf.setFillColor(255, 255, 255);
+                pdf.setDrawColor(255, 255, 255);
+                pdf.setGState(pdf.GState({ opacity: overlayOpacity }));
+                pdf.rect(
+                    overlayMargin,
+                    overlayMargin,
+                    pageW - overlayMargin * 2,
+                    pageH - overlayMargin * 2,
+                    'F'
+                );
+                pdf.setGState(pdf.GState({ opacity: 1 }));
+            } catch (err) {
+                // fallback: semi-opaque overlay using RGB fill without gState if not supported
+                pdf.setFillColor(255, 255, 255);
+                pdf.rect(
+                    overlayMargin,
+                    overlayMargin,
+                    pageW - overlayMargin * 2,
+                    pageH - overlayMargin * 2,
+                    'F'
+                );
+            }
+        };
+
+        // Header
+        const drawHeader = (title) => {
+            drawBackground();
+            drawOverlay();
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(18);
+            pdf.text(title, margin, 12);
+            pdf.setDrawColor(0, 0, 0);   // r, g, b
+            pdf.setLineWidth(0.25); pdf.setLineWidth(0.2);
+            pdf.line(margin, 14, pageW - margin, 14);
+            pdf.setFont('helvetica', 'normal');
+        };
+
+        // Footer
+        const drawFooter = () => {
+            const ftxt = this.options.pdf.footerText || 'Generated by SimpleCalendar';
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(10);
+            pdf.text(ftxt, margin, pageH - 8);
+            var pageNum = pdf.internal.getNumberOfPages() - 1;
+            pdf.text(
+                String(pageNum),
+                pageW - margin,
+                pageH - 8,
+                { align: 'right' }
+            );
+            pdf.setFont('helvetica', 'normal');
+        };
+
+        const drawCoverPage = async () => {
+            //console.log(this.options)
+            const title = this.options.pdf.cover.title || 'Title';
+            const subtitle = this.options.pdf.cover.subtitle || 'SubTitle';
+            const extraLines = this.options.pdf.cover.extraLines || [
+                "Line 1",
+                "Line 2"
+            ];
+            const dates = this.options.pdf.cover.dates || 'Dates';
+            const location = this.options.pdf.cover.location || 'Location';
+            drawBackground();
+            drawOverlay();
+
+            const parts = [];
+
+            parts.push({ type: 'text', size: 20, text: title });
+            parts.push({ type: 'text', size: 32, text: subtitle });
+            extraLines.forEach(t => {
+                parts.push({ type: 'text', size: 20, text: t });
+            });
+            parts.push({ type: 'text', size: 14, text: dates });
+            parts.push({ type: 'text', size: 14, text: location });
+
+            // Logo (handled after size calculation)
+            let logoData = null;
+            let logoW = 0;
+            let logoH = 0;
+
+            if (this.options.pdf.logoUrl) {
+                logoData = await this._loadImageAsBase64(this.options.pdf.logoUrl);
+                const img = new Image();
+                img.src = logoData;
+                await new Promise(res => img.onload = res);
+
+                const natW = img.width || 1;
+                const natH = img.height || 1;
+
+                logoW = maxLogoW;
+                logoH = natH * (logoW / natW);
+
+                if (logoH > maxLogoH) {
+                    logoH = maxLogoH;
+                    logoW = natW * (logoH / natH);
+                }
+
+                parts.push({ type: 'image', width: logoW, height: logoH, data: logoData });
+            }
+
+            // Compute total height
+            let totalH = 0;
+            parts.forEach(p => {
+                if (p.type === 'text') totalH += p.size + 6;
+                if (p.type === 'image') totalH += p.height + 10;
+            });
+
+            const startY = (pageH - totalH) / 2;
+
+            // Draw
+            let y = startY;
+
+            for (const p of parts) {
+                if (p.type === 'text') {
+                    pdf.setFontSize(p.size);
+                    pdf.setFont('helvetica', 'bold');
+                    const lines = pdf.splitTextToSize(p.text, pageW - margin * 4);
+                    pdf.text(lines, pageW / 2, y, { align: 'center' });
+                    //pdf.text(p.text, pageW / 2, y, { align: 'center' });
+                    y += p.size + 6;
+                }
+                if (p.type === 'image') {
+                    pdf.addImage(p.data, 'PNG', (pageW - p.width) / 2, y, p.width, p.height);
+                    y += p.height + 10;
+                }
+            }
+
+            //drawFooter();
+        }
+        const drawWelcomePage = async () => {
+            let y = margin;
+            const title = this.options.pdf.welcome.title || 'Welcome';
+            const message = this.options.pdf.welcome.message || 'Welcome to this event';
+
+            drawBackground();
+            drawOverlay();
+
+            if (title) {
+                pdf.setFontSize(28);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text(title, pageW / 2, y, { align: 'center' });
+                y += 20;
+            }
+
+            pdf.setFontSize(14);
+            pdf.setFont('helvetica', 'normal');
+            const lines = pdf.splitTextToSize(message, pageW - margin * 2);
+            pdf.text(lines, margin, y);
+
+            drawFooter();
+        }
+
+        await drawCoverPage();
+        addBookmark('Cover'); // parent=null, title, page number
+
 
         pdf.addPage();
 
-        // Group events by ISO date in user timezone
-        const eventsByDay = {};
-        this.events.forEach(ev => {
-            const d = formatISOInZoneFromJS(ev.startDate, this.DateTime, this.userTimezone);
-            const key = d.split('T')[0];
-            if (!eventsByDay[key]) eventsByDay[key] = [];
-            eventsByDay[key].push(ev);
+        await drawWelcomePage();
+        addBookmark('Welcome'); // parent=null, title, page number
+
+
+        //pdf.addPage();
+
+        // -------------------------------
+        // Columns + column positions (ensure `col` is defined)
+        // -------------------------------
+        const columns = this.options.pdf.columns || [
+            { label: 'Time', key: 'timerange', width: 20 },
+            { label: 'Title', key: 'title', width: 50 },
+            { label: 'Speaker', key: 'speaker', width: 30 }
+        ];
+
+        const col = [];
+        let curX = margin;
+        columns.forEach(c => {
+            const w = innerW * (c.width / 100);
+            col.push({ ...c, x: curX, w });
+            curX += w;
         });
 
-        const sortedDays = Object.keys(eventsByDay).sort();
+        // -------------------------------
+        // Group events by day
+        // -------------------------------
+        const eventsByDay = {};
+        (this.events || []).forEach(ev => {
+            const d = this._luxonToIso(ev.startDate).split('T')[0];
+            if (!eventsByDay[d]) eventsByDay[d] = [];
+            eventsByDay[d].push(ev);
+        });
+        const days = Object.keys(eventsByDay).sort();
 
-        sortedDays.forEach((day, index) => {
-            if (index > 0) pdf.addPage();
-            y = margin;
+        // -------------------------------
+        // Start Program Schedule page
+        // -------------------------------
+        pdf.addPage();
+        addBookmark('Program Schedule'); // parent=null, title, page number
 
-            const dateStr = formatLongDateInZoneFromJS(eventsByDay[day][0].startDate, this.DateTime, this.userTimezone);
+        drawHeader('Program Schedule');
+        y = 18;
 
-            pdf.setFontSize(16);
-            pdf.text(dateStr, margin, y);
-            y += 10;
-
+        // Draw table header once per page
+        const drawTableHeader = () => {
+            pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(12);
-            pdf.text('Time', margin, y);
-            pdf.text('Title', margin + 35, y);
-            pdf.text('Speaker', margin + 120, y);
+            col.forEach(c => pdf.text(c.label, c.x, y));
+            y += 2;
+            pdf.setDrawColor(0, 0, 0);   // r, g, b
+            pdf.setLineWidth(0.15);
+            pdf.line(margin, y, margin + innerW, y);
+            pdf.setFont('helvetica', 'normal');
             y += 6;
+        };
 
-            pdf.setLineWidth(0.1);
-            pdf.line(margin, y, 200, y);
+        drawTableHeader();
+
+        // ensureSpace will add footer to current page, then start a new page and header
+        const ensureSpace = (h) => {
+            if (y + h > pageH - 10) {
+                // footer for the page we are leaving
+                drawFooter();
+                // start new page
+                pdf.addPage();
+                drawHeader('Program Schedule');
+                y = 18;
+                drawTableHeader();
+            }
+        };
+
+        // -------------------------------
+        // Loop through days without forcing a new page per day
+        // -------------------------------
+        days.forEach((day) => {
+            const list = eventsByDay[day].slice().sort((a, b) => a.startDate - b.startDate);
+            if (!list.length) return;
+
+            const dateStr = list[0].startDate.toFormat(this.options.pdf.longDateFormat || 'DDD');
+
+            // Day title - ensure space for title
+            ensureSpace(12);
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(14);
+            y += 8;
+            pdf.text(dateStr, margin, y);
+            pdf.setFont('helvetica', 'normal');
+            y += 8;
+            pdf.setFontSize(12);
+
+            // Events for the day
+            list.forEach((ev, evIndex) => {
+                const row = {
+                    timerange:
+                        ev.startDate.toFormat(this.options.pdf.timeLabelFormat)
+                        + '-'
+                        + ev.endDate.toFormat(this.options.pdf.timeLabelFormat),
+
+                    title: this.htmlToText(ev.title + (ev.subtitle ? `: ${ev.subtitle}` : '') + (ev.note ? `\n${ev.note}` : '')) || '',
+
+                    speaker: ev.speaker || ev.details?.speaker || '',
+                    moderator: ev.moderator || ev.details?.moderator || '',
+                    room: ev.room || ev.details?.room || ''
+                };
+
+                // Calculate wrapped text and row height
+                const wrapped = {};
+                let rowHeight = 6;
+                col.forEach(c => {
+                    const text = row[c.key] || '';
+                    wrapped[c.key] = pdf.splitTextToSize(text, c.w - 2);
+                    const h = wrapped[c.key].length * 6;
+                    if (h > rowHeight) rowHeight = h;
+                });
+
+                // Page break if needed for the row
+                ensureSpace(rowHeight);
+
+                // Draw line **above the text**
+                const fillColor = this._hexToRgb(this.options.pdf.fillColor);
+                pdf.setDrawColor(fillColor.r, fillColor.g, fillColor.b);
+                pdf.setLineWidth(0.15);
+                pdf.line(margin, y, margin + innerW, y); // draw at current y before text
+
+                // Draw row text
+                col.forEach(c => {
+                    pdf.text(wrapped[c.key], c.x, y + 4);
+                });
+
+                y += rowHeight;
+            });
+
+            // small gap after a day's events
             y += 4;
+        });
 
-            const dayEvents = eventsByDay[day].slice().sort((a, b) => a.startDate - b.startDate);
-            dayEvents.forEach(ev => {
-                const start = this.DateTime.fromJSDate(ev.startDate, { zone: this.userTimezone }).toFormat('HH:mm');
-                const end = this.DateTime.fromJSDate(ev.endDate, { zone: this.userTimezone }).toFormat('HH:mm');
-                const timeRange = start + '-' + end;
+        // Draw footer for the final schedule page
+        drawFooter();
 
-                pdf.text(timeRange, margin, y);
+        const drawClosing = async () => {
+            let y = margin;
+            const title = this.options.pdf.closing.title || 'Closing Title';
+            const message = this.options.pdf.closing.message || 'Closing Message';
 
-                const titleLines = pdf.splitTextToSize(this.htmlToText(ev.title) || '', 75);
-                pdf.text(titleLines, margin + 35, y);
+            drawBackground();
+            drawOverlay();
 
-                const speaker = ev.speaker || ev.details?.speaker || '';
-                const speakerLines = pdf.splitTextToSize(speaker, 70);
-                pdf.text(speakerLines, margin + 120, y);
+            if (title) {
+                pdf.setFontSize(28);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text(title, pageW / 2, y, { align: 'center' });
+                y += 20;
+            }
 
-                const blockHeight = Math.max(titleLines.length, speakerLines.length) * 6;
-                y += blockHeight;
+            pdf.setFontSize(14);
+            pdf.setFont('helvetica', 'normal');
+            const lines = pdf.splitTextToSize(message, pageW - margin * 2);
+            pdf.text(lines, margin, y);
 
-                if (y > 260) {
+            drawFooter();
+        }
+
+        pdf.addPage();
+        addBookmark('Closing Remarks'); // parent=null, title, page number
+
+        await drawClosing();
+
+        const drawCommittee = async () => {
+            const colGap = this.options.pdf.committee.colGap || 10;
+
+            // Automatically choose 2 or 3 columns unless user forces it
+            const columns = this.options.pdf.committee.columns || (pageW > pageH ? 3 : 2);
+
+            const colW = (pageW - margin * 2 - (columns - 1) * colGap) / columns;
+            const cardH = this.options.pdf.committee.cardHeight || 55;     // Height per entry
+
+            const title = this.options.pdf.committee.title || 'Committee';
+            const message = this.options.pdf.committee.message || 'Committee Message';
+
+            if (typeof drawHeader === 'function') drawHeader(title);  // Assuming drawHeader is globally available
+
+            let x = margin;
+            let y = margin;
+
+            for (const member of this.options.pdf.committee.list) {
+
+                // New page if needed
+                if (y + cardH > pageH - margin) {
                     pdf.addPage();
                     y = margin;
                 }
-            });
-        });
+
+                // Text positions
+                const tx = x;
+                let ty = y + 4;
+
+                pdf.setFontSize(12);
+                pdf.setFont('Helvetica', 'bold');
+                //console.info(member.name + ', ' + tx + ', ' + ty)
+                pdf.text(member.name, tx, ty);
+
+                ty += 5;
+                pdf.setFont('Helvetica', 'normal');
+                pdf.text(member.role, tx, ty);
+
+                ty += 5;
+                pdf.text(member.affiliation, tx, ty);
+
+                if (member.location) {
+                    ty += 5;
+                    pdf.text(member.location, tx, ty);
+                }
+
+                // if (member.email) {
+                //     ty += 5;
+                //     pdf.setFontSize(9);
+                //     pdf.text(member.email, tx, ty);
+                // }
+
+                // Next column
+                x += colW + colGap;
+
+                // If end of row, reset x and move y down
+                if (x + colW > pageW - margin) {
+                    x = margin;
+                    y += cardH + 8;
+                    //console.error(`passed height, recalculating to... ${x}, ${y}`)
+                }
+            }
+            drawFooter();
+        }
 
         pdf.addPage();
-
-        pdf.setFontSize(18);
-        pdf.text('Closing Remarks', margin, y);
-        y += 12;
-
-        pdf.setFontSize(12);
-        const closingLines = pdf.splitTextToSize(closingNote, 180);
-        pdf.text(closingLines, margin, y);
+        addBookmark('Committee'); // parent=null, title, page number
+        await drawCommittee();
 
         pdf.save('Conference_Program.pdf');
     }
+
+
+
+    async _loadImageAsBase64(url) {
+        const res = await fetch(url);
+        const blob = await res.blob();
+        return new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(blob);
+        });
+    }
+
 }

@@ -220,20 +220,24 @@ function mergeEventsBySession(events) {
 
 
 async function fetchData() {
-    //console.log('loading program...');
     try {
         const response = await fetch('data.json');
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
+
         const data = await response.json();
         const programData = await loadGoogleSheets(data);
-        //console.log(programData)
-        allEvents = programData.events;
-        //console.log(programJson);
-        return allEvents;
+
+        const allEvents = programData.events;
+
+        return {
+            data,
+            allEvents
+        };
     } catch (err) {
-        console.error(err)
+        console.error(err);
+        return null;
     }
 }
 
