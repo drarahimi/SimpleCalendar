@@ -2054,11 +2054,16 @@ class SimpleCalendar {
                         ty += 5;
                         pdf.setFontSize(9);
 
-                        // Draw the text
-                        pdf.text(sponsor.website, tx, ty, {
-                            link: sponsor.website
-                        });
+                        // Draw the clickable link
+                        pdf.textWithLink(sponsor.website, tx, ty, { url: sponsor.website });
+
+                        // Draw underline
+                        const textWidth = pdf.getTextWidth(sponsor.website);
+                        const lineY = ty + 1; // a little below the text
+                        pdf.setLineWidth(0.2);
+                        pdf.line(tx, lineY, tx + textWidth, lineY);
                     }
+
 
                     // Move to next column
                     x += colW + colGap;
