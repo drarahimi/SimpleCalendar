@@ -580,16 +580,22 @@ class SimpleCalendar {
 
         // Show dropdown
         trigger.addEventListener("click", () => {
-            //e.stopPropagation();        // <<< prevents immediate close
             const rect = trigger.getBoundingClientRect();
-            dropdown.style.left = rect.left + "px";
-            dropdown.style.top = rect.bottom + 5 + "px";
+
+            // Get the scroll offsets
+            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            // Set dropdown position relative to document
+            dropdown.style.left = rect.left + scrollLeft + "px";
+            dropdown.style.top = rect.bottom + scrollTop + 5 + "px";
 
             dropdown.classList.remove("hidden");
             requestAnimationFrame(() => dropdown.classList.add("sc-show"));
 
             searchEl.focus();
         });
+
 
         // Click outside to hide
         setTimeout(() => {
@@ -1891,8 +1897,9 @@ class SimpleCalendar {
             pdf.setFontSize(14);
             pdf.setFont('helvetica', 'normal');
             const lines = pdf.splitTextToSize(message, pageW - margin * 2);
+            const dims = pdf.getTextDimensions("Hello world");
             pdf.text(lines, margin, y);
-            y += 14 * lines.length;
+            y += dims.h * lines.length;
 
             for (const member of this.options.pdf.committee.list) {
 
@@ -1970,8 +1977,9 @@ class SimpleCalendar {
             pdf.setFontSize(14);
             pdf.setFont('helvetica', 'normal');
             const lines = pdf.splitTextToSize(message, pageW - margin * 2);
+            const dims = pdf.getTextDimensions("Hello world");
             pdf.text(lines, margin, y);
-            y += 14 * lines.length;
+            y += dims.h * lines.length;
 
             for (const sponsor of this.options.pdf.sponsors.list) {
                 if (sponsor.level) {// Start a new page if card wont fit
@@ -2037,15 +2045,19 @@ class SimpleCalendar {
                         pdf.text(`Level: ${sponsor.level}`, tx, ty);
                     }
 
-                    if (sponsor.type) {
-                        ty += 5;
-                        pdf.text(`Type: ${sponsor.type}`, tx, ty);
-                    }
+                    // if (sponsor.type) {
+                    //     ty += 5;
+                    //     pdf.text(`Type: ${sponsor.type}`, tx, ty);
+                    // }
 
                     if (sponsor.website) {
                         ty += 5;
                         pdf.setFontSize(9);
-                        pdf.text(sponsor.website, tx, ty);
+
+                        // Draw the text
+                        pdf.text(sponsor.website, tx, ty, {
+                            link: sponsor.website
+                        });
                     }
 
                     // Move to next column
