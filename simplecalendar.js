@@ -122,6 +122,16 @@ class SimpleCalendar {
                     message: 'Thank you for joining us. We appreciate your contribution and hope to see you again at future events.'
                 },
                 committee: {
+                    title: 'Committee',
+                    message: `We would like to thank our committee members`,
+                    colGap: 10,
+                    columns: 3,
+                    cardHeight: 35,
+                    list: []
+                },
+                sponsors: {
+                    title: 'Sponsors',
+                    message: `We would like to thank our sponsors`,
                     colGap: 10,
                     columns: 3,
                     cardHeight: 35,
@@ -137,6 +147,12 @@ class SimpleCalendar {
 
         if (!this.DateTime) {
             console.warn('Luxon not found. Timezone-safe features will be degraded.');
+        }
+
+        // Load saved timezone for user
+        const savedTz = localStorage.getItem("sc-user-timezone");
+        if (savedTz) {
+            this.options.userTimezone = savedTz;
         }
 
         // userTimezone fallback: provided param or detect via Intl if luxon missing
@@ -357,11 +373,259 @@ class SimpleCalendar {
         this.headerEl = document.getElementById('sc-calendar-header');
         this.viewEl = document.getElementById('sc-calendar-view');
 
+        this.container.insertAdjacentHTML("beforeend", `
+            <div id="sc-timezone-dropdown"
+                class="hidden absolute bg-white border rounded shadow-xl p-2 pt-0 z-50 max-h-64 overflow-y-auto overflow-x-hidden"
+                style="width: 260px;">
+            </div>
+        `);
+
         // expose calendar globally for your button inline handlers
         window.calendar = this;
 
         this.render();
     }
+
+    _getTimezoneCountryCode(tz) {
+        const map = {
+            "America/New_York": "us",
+            "America/Chicago": "us",
+            "America/Denver": "us",
+            "America/Los_Angeles": "us",
+            "America/Phoenix": "us",
+            "America/Anchorage": "us",
+            "America/Adak": "us",
+
+            "America/Toronto": "ca",
+            "America/Vancouver": "ca",
+            "America/Montreal": "ca",
+            "America/Edmonton": "ca",
+            "America/Halifax": "ca",
+            "America/St_Johns": "ca",
+
+            "Europe/London": "gb",
+            "Europe/Berlin": "de",
+            "Europe/Paris": "fr",
+            "Europe/Rome": "it",
+            "Europe/Madrid": "es",
+            "Europe/Amsterdam": "nl",
+            "Europe/Stockholm": "se",
+            "Europe/Oslo": "no",
+            "Europe/Zurich": "ch",
+            "Europe/Warsaw": "pl",
+            "Europe/Athens": "gr",
+
+            "Asia/Tehran": "ir",
+            "Asia/Dubai": "ae",
+            "Asia/Tokyo": "jp",
+            "Asia/Seoul": "kr",
+            "Asia/Shanghai": "cn",
+            "Asia/Kolkata": "in",
+            "Asia/Singapore": "sg",
+            "Asia/Hong_Kong": "hk",
+            "Asia/Bangkok": "th",
+            "Asia/Jakarta": "id",
+            "Asia/Manila": "ph",
+
+            "Australia/Sydney": "au",
+            "Australia/Melbourne": "au",
+            "Australia/Brisbane": "au",
+            "Australia/Adelaide": "au",
+            "Australia/Perth": "au",
+
+            "Pacific/Auckland": "nz",
+            "Pacific/Honolulu": "us",
+            "Pacific/Fiji": "fj",
+
+            "Africa/Cairo": "eg",
+            "Africa/Johannesburg": "za",
+            "Africa/Nairobi": "ke",
+
+            "America/Mexico_City": "mx",
+            "America/Sao_Paulo": "br",
+            "America/Buenos_Aires": "ar",
+            "America/Bogota": "co",
+            "America/Lima": "pe",
+
+            "Europe/Moscow": "ru",
+            "Asia/Istanbul": "tr",
+
+            "Antarctica/Troll": "aq"
+        };
+
+        // direct match if present
+        if (map[tz]) return map[tz];
+
+        // Fallback based on continent
+        const region = tz.split("/")[0];
+        if (region === "Europe") return "eu";
+        if (region === "Africa") return "za";
+        if (region === "Asia") return "sg";
+        if (region === "America") return "us";
+        if (region === "Australia") return "au";
+        if (region === "Pacific") return "fj";
+
+        return "un"; // United Nations default
+    }
+
+
+    _getTimezoneFlag(tz) {
+        const code = this._getTimezoneCountryCode(tz).toLowerCase();
+        return `https://flagcdn.com/w20/${code}.png`;
+    }
+
+    _getTimezoneTooltip(tz) {
+        const dt = this.DateTime.now().setZone(tz);
+        const offset = dt.toFormat("ZZ");
+        const region = tz.split("/")[0].replace("_", " ");
+        const city = tz.split("/")[1]?.replace("_", " ") || "";
+        return `${region}, ${city}  (UTC${offset})`;
+    }
+
+
+
+    _setupTimezoneSelector() {
+        const trigger = this.headerEl.querySelector("#sc-timezone-selector");
+        const dropdown = this.container.querySelector("#sc-timezone-dropdown");
+
+        if (!trigger || !dropdown) return;
+
+        // Load all IANA timezones
+        const zones = luxon.IANAZone.isValidZone
+            ? Intl.supportedValuesOf("timeZone")
+            : [];
+
+        // Prepare dropdown content
+        dropdown.innerHTML = `
+    <div id="sc-tz-search-wrapper"
+         class="sticky top-0 bg-white z-10 pb-2 pt-2"
+         style="background:white;">
+        
+        <input type="search" id="sc-tz-search"
+               class="w-full p-1 border rounded mb-2"
+               placeholder="Search timezone">
+
+        <button id="sc-tz-reset"
+                class="w-full text-center p-1 border rounded bg-gray-100 hover:bg-gray-200">
+            Reset to system timezone
+        </button>
+    </div>
+
+    <div id="sc-tz-list"></div>
+`;
+
+
+        const listEl = dropdown.querySelector("#sc-tz-list");
+        const searchEl = dropdown.querySelector("#sc-tz-search");
+        const resetBtn = dropdown.querySelector("#sc-tz-reset");
+
+        resetBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+
+            // System timezone from browser
+            const systemZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+            // Save choice
+            localStorage.setItem("sc-user-timezone", systemZone);
+
+            // Hide dropdown with animation
+            dropdown.classList.remove("sc-show");
+            setTimeout(() => dropdown.classList.add("hidden"), 150);
+
+            // Reinitialize calendar
+            const oldOptions = { ...this.options, userTimezone: systemZone };
+            const rawEvents = [...this.rawEvents];
+
+            this.container.innerHTML = "";
+            new SimpleCalendar(this.container.id, rawEvents, oldOptions);
+        });
+        const renderList = (filter = "") => {
+            const f = filter.toLowerCase();
+
+            const filtered = zones
+                .filter(z => z.toLowerCase().includes(f))
+                .map(z => {
+                    const dt = this.DateTime.now().setZone(z);
+                    return {
+                        zone: z,
+                        offset: dt.offset  /* offset in minutes */
+                    };
+                })
+                .sort((a, b) => a.offset - b.offset);
+
+            listEl.innerHTML = filtered
+                .map(item => {
+                    const z = item.zone;
+                    const flag = this._getTimezoneFlag(z);
+                    const tip = this._getTimezoneTooltip(z);
+
+                    return `
+                <div class="p-1 hover:bg-gray-200 cursor-pointer tz-item flex items-center"
+                     title="${tip}">
+                    <img class="sc-flag" src="${flag}">
+                    <span>${z}</span>
+                </div>
+            `;
+                })
+                .join("");
+        };
+
+
+        renderList();
+
+        // Search filter
+        searchEl.addEventListener("input", () => {
+            renderList(searchEl.value);
+        });
+
+        // Show dropdown
+        trigger.addEventListener("click", () => {
+            //e.stopPropagation();        // <<< prevents immediate close
+            const rect = trigger.getBoundingClientRect();
+            dropdown.style.left = rect.left + "px";
+            dropdown.style.top = rect.bottom + 5 + "px";
+
+            dropdown.classList.remove("hidden");
+            requestAnimationFrame(() => dropdown.classList.add("sc-show"));
+
+            searchEl.focus();
+        });
+
+        // Click outside to hide
+        setTimeout(() => {
+            const closeHandler = (e) => {
+                if (!dropdown.contains(e.target) && !trigger.contains(e.target)) {
+                    dropdown.classList.remove("sc-show");
+                    setTimeout(() => dropdown.classList.add("hidden"), 150);
+                    document.removeEventListener("click", closeHandler);
+                }
+            };
+            document.addEventListener("click", closeHandler);
+        }, 0);
+
+
+        // Select timezone
+        dropdown.addEventListener("click", (e) => {
+            const item = e.target.closest(".tz-item");
+            if (!item) return;
+
+            const newZone = item.textContent.trim();
+
+            // Save selection
+            localStorage.setItem("sc-user-timezone", newZone);
+
+            dropdown.classList.remove("sc-show");
+            setTimeout(() => dropdown.classList.add("hidden"), 150);
+
+            // Reinitialize calendar
+            const oldOptions = { ...this.options, userTimezone: newZone };
+            const raw = [...this.rawEvents];
+            this.container.innerHTML = "";
+
+            new SimpleCalendar(this.container.id, raw, oldOptions);
+        });
+    }
+
 
     setView(viewName) {
         if (this.options.views[viewName]) {
@@ -551,6 +815,7 @@ class SimpleCalendar {
     render(header = true) {
         if (header) {
             this.renderHeader();
+            this._setupTimezoneSelector();
             this.setUpSearch();
         }
 
@@ -632,9 +897,11 @@ class SimpleCalendar {
                 <span class="text-3xl font-bold text-gray-800 leading-tight truncate">
                     ${viewTitle}
                 </span>
-                <span class="text-sm text-gray-600 truncate">
-                    ${this._friendlyTimeZoneWithOffset()}
-                </span>
+            <span id="sc-timezone-selector"
+                class="text-sm text-gray-600 cursor-pointer underline"
+                title="Click to change timezone">
+                ${this._friendlyTimeZoneWithOffset()}
+            </span>
             </div>
             <!-- Navigation row -->
             <div class="flex w-full sm:w-auto space-x-2 items-center">
@@ -1619,7 +1886,13 @@ class SimpleCalendar {
             if (typeof drawHeader === 'function') drawHeader(title);  // Assuming drawHeader is globally available
 
             let x = margin;
-            let y = margin;
+            let y = margin + 4;
+
+            pdf.setFontSize(14);
+            pdf.setFont('helvetica', 'normal');
+            const lines = pdf.splitTextToSize(message, pageW - margin * 2);
+            pdf.text(lines, margin, y);
+            y += 14 * lines.length;
 
             for (const member of this.options.pdf.committee.list) {
 
@@ -1672,6 +1945,127 @@ class SimpleCalendar {
         pdf.addPage();
         addBookmark('Committee'); // parent=null, title, page number
         await drawCommittee();
+
+        const drawSponsors = async () => {
+            const colGap = this.options.pdf.sponsors.colGap || 10;
+
+            // Auto choose columns unless user forces it
+            const columns = this.options.pdf.sponsors.columns || (pageW > pageH ? 3 : 2);
+
+            const colW = (pageW - margin * 2 - (columns - 1) * colGap) / columns;
+
+            // Height per card, taller than committee because of logos
+            const cardH = this.options.pdf.sponsors.cardHeight || 70;
+
+            const title = this.options.pdf.sponsors.title || "Sponsors";
+            const message = this.options.pdf.sponsors.message || 'Closing Message';
+
+            if (typeof drawHeader === "function") {
+                drawHeader(title);
+            }
+
+            let x = margin;
+            let y = margin + 4;
+
+            pdf.setFontSize(14);
+            pdf.setFont('helvetica', 'normal');
+            const lines = pdf.splitTextToSize(message, pageW - margin * 2);
+            pdf.text(lines, margin, y);
+            y += 14 * lines.length;
+
+            for (const sponsor of this.options.pdf.sponsors.list) {
+                if (sponsor.level) {// Start a new page if card wont fit
+                    if (y + cardH > pageH - margin) {
+                        pdf.addPage();
+                        y = margin;
+                    }
+
+                    // Draw sponsor logo if available
+                    let maxImgW = 40; // maximum width
+                    let maxImgH = 20; // maximum height
+                    let imgH = 20;
+                    let imgW = 40;
+                    let imgX = x;
+                    let imgY = y;
+
+                    if (sponsor.image_url) {
+                        try {
+                            const imgData = await this._loadImageAsBase64(sponsor.image_url);
+
+                            // Create an Image object to get original dimensions
+                            const img = new Image();
+                            img.src = imgData;
+
+                            await new Promise((resolve, reject) => {
+                                img.onload = resolve;
+                                img.onerror = reject;
+                            });
+
+                            // Calculate aspect ratio
+                            const ratio = Math.min(maxImgW / img.width, maxImgH / img.height);
+                            const imgW = img.width * ratio;
+                            const imgH = img.height * ratio;
+
+                            pdf.addImage({
+                                imageData: imgData,
+                                format: "PNG",
+                                x: imgX,
+                                y: imgY,
+                                width: imgW,
+                                height: imgH
+                            });
+
+                        } catch (err) {
+                            console.warn("Failed to load sponsor logo", sponsor.image_url, err);
+                        }
+                    }
+
+
+                    // Text content
+                    let tx = x;
+                    let ty = y + imgH + 5;
+
+                    pdf.setFontSize(12);
+                    pdf.setFont("Helvetica", "bold");
+                    pdf.text(sponsor.name, tx, ty);
+
+                    pdf.setFont("Helvetica", "normal");
+                    pdf.setFontSize(10);
+
+                    if (sponsor.level) {
+                        ty += 5;
+                        pdf.text(`Level: ${sponsor.level}`, tx, ty);
+                    }
+
+                    if (sponsor.type) {
+                        ty += 5;
+                        pdf.text(`Type: ${sponsor.type}`, tx, ty);
+                    }
+
+                    if (sponsor.website) {
+                        ty += 5;
+                        pdf.setFontSize(9);
+                        pdf.text(sponsor.website, tx, ty);
+                    }
+
+                    // Move to next column
+                    x += colW + colGap;
+
+                    // If next card would overflow row width, wrap to next row
+                    if (x + colW > pageW - margin) {
+                        x = margin;
+                        y += cardH + 8;
+                    }
+                }
+            }
+
+            drawFooter();
+        };
+
+        pdf.addPage();
+        addBookmark('Sponsors'); // parent=null, title, page number
+        await drawSponsors();
+
 
         pdf.save('Conference_Program.pdf');
     }

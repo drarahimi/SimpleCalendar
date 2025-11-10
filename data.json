@@ -582,57 +582,43 @@
             "name": "Ridgetop Group, Inc.",
             "level": "Gold",
             "type": "corporate",
-            "image_url": "assets/sponsors/ridgetop_group_logo.jpg",
+            "image_url": "https://i.ibb.co/9HgGSY4P/ridgetop-group-logo.jpg",
             "website": "https://www.ridgetopgroup.com/"
         },
         {
             "name": "IEEE Reliability Society",
             "level": "Financial",
             "type": "society",
-            "image_url": "assets/sponsors/ieee_reliability_society.png",
+            "image_url": "https://i.ibb.co/3mkw6yTB/ieee-reliability-society.jpg",
             "website": "https://rs.ieee.org/"
         },
         {
             "name": "CableLabs",
             "level": "Technical",
             "type": "corporate",
-            "image_url": "assets/sponsors/cablelabs.png",
+            "image_url": "https://i.ibb.co/9mD1jWkn/cablelabs.png",
             "website": "https://www.cablelabs.com/"
         },
         {
             "name": "Toronto Metropolitan University",
             "/level": "Technical",
             "type": "academic",
-            "image_url": "assets/sponsors/tmu.jpg",
+            "image_url": "https://i.ibb.co/ymNY5H09/tmu.jpg",
             "website": "https://www.torontomu.ca/"
         },
         {
             "name": "IEEE",
             "/level": "Technical",
             "type": "society",
-            "image_url": "assets/sponsors/ieee.svg",
+            "image_url": "https://i.ibb.co/DHK4QV40/idf-CSKQr58-logos.png",
             "website": "https://www.ieee.org/"
         },
         {
             "name": "Eastern Washington University CSTEM",
             "level": "Technical",
             "type": "academic",
-            "image_url": "/assets/sponsors/cstem_logo.png",
+            "image_url": "https://i.ibb.co/q3tk20Cy/CSTEM-logo.png",
             "website": "https://www.ewu.edu/cstem/"
-        },
-        {
-            "name": "Malardalen University",
-            "/level": "Technical",
-            "type": "academic",
-            "image_url": "https://www.mdu.se/images/18.573bb95917d7063b4b221126/1639415494071/MDU_logotype_english.svg",
-            "website": "https://www.mdu.se/en/malardalen-university"
-        },
-        {
-            "name": "Malardalen Industrial Technology Center (MITC)",
-            "/level": "Technical",
-            "type": "academic",
-            "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVfPJ60ztUpW7_7vSnrY41By8hkmKUgaNR1w&s",
-            "website": "https://mitc.se/en/home/"
         }
     ],
     "cfp": {

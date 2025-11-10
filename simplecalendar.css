@@ -103,3 +103,28 @@
       .sc-pdf-export-mode .sticky {
           position: static !important;
       }
+
+      /* Smooth animation */
+#sc-timezone-dropdown {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+/* When visible */
+#sc-timezone-dropdown.sc-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Flag icon */
+.sc-flag {
+    width: 18px;
+    height: 14px;
+    object-fit: cover;
+    margin-right: 6px;
+}
+
+#sc-tz-search-wrapper {
+    box-shadow: 0 2px 3px rgba(0,0,0,0.05);
+}
