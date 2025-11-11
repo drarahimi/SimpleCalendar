@@ -166,7 +166,13 @@ class SimpleCalendar {
 
 
         // parse initial view/date -> store currentDate as JS Date in user timezone
-        this.currentView = this.options.initialView || 'Day1';
+        // Load saved view for user
+        const savedView = localStorage.getItem("sc-user-view");
+        if (savedTz) {
+            this.options.initialView = savedView;
+        }
+
+        this.currentView = this.options.initialView || Object.keys(this.options.views)[0] || 'Day1';
         this.currentDate = this.initialDate;
         //console.log(this.currentDate);
         // slot times (minutes)
@@ -624,7 +630,7 @@ class SimpleCalendar {
             setTimeout(() => dropdown.classList.add("hidden"), 150);
 
             // Reinitialize calendar
-            const oldOptions = { ...this.options, userTimezone: newZone };
+            const oldOptions = { ...this.options, initialView: this.currentView, userTimezone: newZone };
             const raw = [...this.rawEvents];
             this.container.innerHTML = "";
 
@@ -636,9 +642,12 @@ class SimpleCalendar {
     setView(viewName) {
         if (this.options.views[viewName]) {
             this.currentView = viewName;
+             // Save selection
+            localStorage.setItem("sc-user-view", viewName);
             //console.log(viewName);
         } else {
             this.currentView = Object.keys(this.options.views)[0];
+            localStorage.setItem("sc-user-view", Object.keys(this.options.views)[0]);
         }
         this.render();
         //this._callDatesSet();
