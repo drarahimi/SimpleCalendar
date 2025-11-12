@@ -511,10 +511,17 @@ class SimpleCalendar {
                class="w-full p-1 border rounded mb-2"
                placeholder="Search timezone">
 
-        <button id="sc-tz-reset"
-                class="w-full text-center p-1 border rounded bg-gray-100 hover:bg-gray-200">
-            Reset to system timezone
-        </button>
+<div class="flex gap-2">
+    <button id="sc-tz-reset-to-system" title="Reset to system timezone"
+        class="flex-1 flex items-center justify-center p-1 border rounded bg-gray-100 hover:bg-gray-200">
+        <span class="mr-1">🖥️</span> System TZ
+    </button>
+
+    <button id="sc-tz-reset-to-event" title="Reset to event timezone"
+        class="flex-1 flex items-center justify-center p-1 border rounded bg-gray-100 hover:bg-gray-200">
+        <span class="mr-1">📅</span> Event TZ
+    </button>
+</div>
     </div>
 
     <div id="sc-tz-list"></div>
@@ -523,9 +530,10 @@ class SimpleCalendar {
 
         const listEl = dropdown.querySelector("#sc-tz-list");
         const searchEl = dropdown.querySelector("#sc-tz-search");
-        const resetBtn = dropdown.querySelector("#sc-tz-reset");
+        const resetBtnSystem = dropdown.querySelector("#sc-tz-reset-to-system");
+        const resetBtnEvent = dropdown.querySelector("#sc-tz-reset-to-event");
 
-        resetBtn.addEventListener("click", (e) => {
+        resetBtnSystem.addEventListener("click", (e) => {
             e.stopPropagation();
 
             // System timezone from browser
@@ -540,6 +548,26 @@ class SimpleCalendar {
 
             // Reinitialize calendar
             const oldOptions = { ...this.options, userTimezone: systemZone };
+            const rawEvents = [...this.rawEvents];
+
+            this.container.innerHTML = "";
+            new SimpleCalendar(this.container.id, rawEvents, oldOptions);
+        });
+                resetBtnEvent.addEventListener("click", (e) => {
+            e.stopPropagation();
+
+            // System timezone from browser
+            const eventZone = this.originalTimezone;
+
+            // Save choice
+            localStorage.setItem("sc-user-timezone", eventZone);
+
+            // Hide dropdown with animation
+            dropdown.classList.remove("sc-show");
+            setTimeout(() => dropdown.classList.add("hidden"), 150);
+
+            // Reinitialize calendar
+            const oldOptions = { ...this.options, userTimezone: eventZone };
             const rawEvents = [...this.rawEvents];
 
             this.container.innerHTML = "";
