@@ -501,6 +501,41 @@ class SimpleCalendar {
             ? Intl.supportedValuesOf("timeZone")
             : [];
 
+//https://picsvg.com/            
+const timezoneSvg = `<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="16pt" height="16pt" viewBox="0 0 300.000000 300.000000"
+ preserveAspectRatio="xMidYMid meet">
+<g transform="translate(0.000000,300.000000) scale(0.100000,-0.100000)"
+fill="currentColor" stroke="none">
+<path d="M1362 2880 c-319 -33 -615 -174 -841 -401 -425 -424 -528 -1065 -258
+-1604 21 -44 48 -92 58 -107 29 -40 24 -46 -29 -37 -124 21 -172 3 -172 -64 0
+-57 22 -68 198 -93 86 -13 175 -24 198 -24 66 0 75 17 101 203 27 194 28 226
+7 255 -11 16 -25 22 -54 22 -54 0 -76 -31 -85 -118 -9 -95 -17 -103 -47 -50
+-99 169 -168 385 -168 524 l0 44 108 0 c124 0 142 9 142 72 0 58 -20 68 -143
+68 l-107 0 0 48 c0 56 29 191 60 282 45 131 126 277 209 377 l35 42 38 -34
+c45 -42 79 -45 113 -10 35 34 32 68 -10 114 l-35 38 58 45 c338 266 787 336
+1189 188 59 -22 170 -76 223 -108 67 -42 130 -17 130 52 0 43 -27 67 -148 129
+-224 116 -522 173 -770 147z"/>
+<path d="M1449 2641 l-24 -19 0 -549 c0 -437 3 -556 14 -588 10 -31 81 -108
+319 -347 289 -291 309 -308 343 -308 45 0 69 25 69 71 0 31 -23 57 -292 326
+l-293 293 -5 551 -5 551 -24 19 c-30 24 -72 24 -102 0z"/>
+<path d="M2426 2434 c-9 -8 -18 -25 -21 -37 -10 -44 -45 -318 -45 -350 0 -48
+24 -77 64 -77 57 0 76 24 89 118 7 45 16 83 22 84 15 1 109 -184 138 -274 32
+-99 57 -223 57 -284 l0 -44 -108 0 c-124 0 -142 -9 -142 -72 0 -58 20 -68 143
+-68 l107 0 0 -39 c0 -170 -107 -452 -238 -626 l-64 -86 -39 36 c-46 42 -80 45
+-114 10 -35 -34 -32 -68 10 -114 l36 -39 -79 -59 c-96 -73 -249 -152 -362
+-188 -96 -30 -215 -55 -265 -55 l-33 0 -4 104 c-4 122 -17 146 -78 146 -61 0
+-74 -23 -78 -147 l-4 -106 -67 7 c-140 13 -316 71 -460 152 -89 50 -107 53
+-145 23 -37 -29 -36 -79 3 -112 85 -71 325 -169 498 -204 131 -26 365 -23 511
+5 570 113 1005 553 1108 1122 23 128 24 355 0 475 -34 180 -102 359 -192 504
+-21 34 -23 43 -10 38 9 -4 51 -9 94 -13 67 -6 80 -4 101 13 31 26 33 76 3 105
+-18 18 -50 26 -184 45 -195 27 -232 28 -252 7z"/>
+</g>
+</svg>`
+
         // Prepare dropdown content
         dropdown.innerHTML = `
     <div id="sc-tz-search-wrapper"
@@ -514,12 +549,12 @@ class SimpleCalendar {
 <div class="flex gap-2">
     <button id="sc-tz-reset-to-system" title="Reset to system timezone"
         class="flex-1 flex items-center justify-center p-1 border rounded bg-gray-100 hover:bg-gray-200">
-        <span class="mr-1">🖥️</span> System TZ
+        <span class="mr-1">${timezoneSvg}</span> System
     </button>
 
     <button id="sc-tz-reset-to-event" title="Reset to event timezone"
         class="flex-1 flex items-center justify-center p-1 border rounded bg-gray-100 hover:bg-gray-200">
-        <span class="mr-1">📅</span> Event TZ
+        <span class="mr-1">${timezoneSvg}</span> Event
     </button>
 </div>
     </div>
