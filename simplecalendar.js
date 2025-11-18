@@ -1468,7 +1468,7 @@ renderTimesColumn() {
 
                 // Create overlay
                 const overlay = document.createElement('div');
-                overlay.className = 'fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center';
+                overlay.className = 'fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center';
 
                 // Create tooltip modal box
                 const tooltip = document.createElement('div');
