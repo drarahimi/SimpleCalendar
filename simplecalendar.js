@@ -1104,20 +1104,82 @@ l-293 293 -5 551 -5 551 -24 19 c-30 24 -72 24 -102 0z"/>
         this._attachEventMountHandlers();
     }
 
-    renderTimesColumn() {
-        // Render visible slot labels based on slotMinTime/slotMaxTime using user timezone
-        let html = `<div class="sticky top-0 bg-white z-2 pt-0">`;
-        const startHour = Math.floor(this.slotMinMinutes / 60);
-        const endHour = Math.ceil(this.slotMaxMinutes / 60);
-        for (let h = startHour; h <= endHour; h++) {
-            // build a DateTime at hour h on an arbitrary day in user timezone for consistent formatting
-            const dt = this.currentDate.set({ hour: h, minute: 0, second: 0, millisecond: 0 });
-            const hourDisplay = dt.toFormat(this.options.slotLabelFormat);
-            html += `<div class="sc-hour-label text-xs text-gray-500" style="height: ${this.hourHeightPx}px; line-height: ${this.hourHeightPx}px;">${hourDisplay}</div>`;
+renderTimesColumn() {
+    let html = `<div class="sticky top-0 bg-white z-2 pt-0">`;
+
+    const startMinutes = this.slotMinMinutes;
+    const endMinutes   = this.slotMaxMinutes;
+
+    // measure a natural height for the hour label
+    const temp = document.createElement('div');
+    temp.className = 'sc-hour-label text-xs text-gray-500';
+    temp.style.position = 'absolute';
+    temp.style.visibility = 'hidden';
+    temp.innerText = '12 PM';
+    document.body.appendChild(temp);
+    const hourLabelHeight = temp.offsetHeight;
+    document.body.removeChild(temp);
+
+    const hourBlockHeight = this.hourHeightPx;
+
+    // one half hour must fit between two hour labels
+    const halfHourHeight = hourBlockHeight - hourLabelHeight * 2;
+
+    for (let m = startMinutes; m <= endMinutes; m += 30) {
+
+        const hour = Math.floor(m / 60);
+        const minute = m % 60;
+
+        const dt = this.currentDate.set({
+            hour,
+            minute,
+            second: 0,
+            millisecond: 0
+        });
+
+        if (minute === 0) {
+
+            // top-of-hour label
+            const label = dt.toFormat(this.options.slotLabelFormat);
+
+            html += `
+                <div class="sc-hour-label text-xs text-gray-500"
+                     style="height:${hourLabelHeight}px; line-height:${hourLabelHeight}px;">
+                    ${label}
+                </div>
+            `;
+
+        } else {
+
+            // 30 minute region
+            const halfLabel = dt.toFormat("h:mm");
+
+            // half hour block between two hour labels
+            html += `
+                <div class="sc-hour-label text-xs text-gray-500"
+                     style="height:${halfHourHeight}px; line-height:${halfHourHeight}px;">
+                    ${halfLabel}
+                </div>
+            `;
+
+            // bottom-of-hour label for the same hour block
+            const bottomHourLabel = dt.plus({ hours: 1 }).set({ minute: 0 }).toFormat(this.options.slotLabelFormat);
+
+            html += `
+                <div class="sc-hour-label text-xs text-gray-500"
+                     style="height:${hourLabelHeight}px; line-height:${hourLabelHeight}px;">
+                    ${bottomHourLabel}
+                </div>
+            `;
         }
-        html += `</div>`;
-        return html;
     }
+
+    html += `</div>`;
+    return html;
+}
+
+
+
 
     renderTimeSlots(sampleDay) {
         let html = '';

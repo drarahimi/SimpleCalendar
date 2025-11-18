@@ -1,15 +1,9 @@
       .sc-hour-label {
-          grid-column: 1 / 2;
           text-align: right;
-          padding-right: 0.5rem;
-          height: 60px;
-          /* Standard hour height */
-          margin-top: -0px;
-          /* Align label to the line */
-          z-index: 5;
-          /* Ensure time labels are above lines */
-          background-color: white;
-          /* Prevent line showing through number */
+          padding-right: 0.25rem;
+          margin-top: 0px;
+          position: relative;
+          z-index: 4;
       }
 
       .sc-time-slot-line-hour {
