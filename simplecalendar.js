@@ -170,7 +170,7 @@ class SimpleCalendar {
         // parse initial view/date -> store currentDate as JS Date in user timezone
         // Load saved view for user
         const savedView = localStorage.getItem("sc-user-view");
-        if (savedTz) {
+        if (savedView) {
             this.options.initialView = savedView;
         }
 
