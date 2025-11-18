@@ -2150,7 +2150,7 @@ l-293 293 -5 551 -5 551 -24 19 c-30 24 -72 24 -102 0z"/>
 
                     if (sponsor.level) {
                         ty += 5;
-                        pdf.text(`Level: ${sponsor.level}`, tx, ty);
+                        pdf.text(`${sponsor.level} sponsor`, tx, ty);
                     }
 
                     // if (sponsor.type) {
