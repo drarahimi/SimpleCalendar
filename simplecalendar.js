@@ -1152,7 +1152,7 @@ renderTimesColumn() {
         } else {
 
             // 30 minute region
-            const halfLabel = dt.toFormat("h:mm");
+            const halfLabel = dt.toFormat(this.options.slotLabelFormat);
 
             // half hour block between two hour labels
             html += `
