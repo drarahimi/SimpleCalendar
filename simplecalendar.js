@@ -2605,72 +2605,112 @@ l-293 293 -5 551 -5 551 -24 19 c-30 24 -72 24 -102 0z"/>
             drawFooter();
         };
 
-        // ---------------- FEATURED TALKS ----------------
-        const drawFeaturedTalks = async () => {
-            const talks = this.options.pdf.featuredTalks || [];
-            if (!talks.length) return;
+// ---------------- FEATURED TALKS ----------------
+const drawFeaturedTalks = async () => {
+    const talks = this.options.pdf.featuredTalks || [];
+    if (!talks.length) return;
 
-            pdf.addPage('a4', 'portrait');
-            updateDimensions();
-            addBookmark('Featured Talks');
-            drawHeader('Featured Sessions & Talks');
+    pdf.addPage('a4', 'portrait');
+    updateDimensions();
+    addBookmark('Featured Talks');
+    drawHeader('Featured Sessions & Talks');
 
-            let ty = 25;
-            for (const talk of talks) {
-                if (!talk.title)
-                    continue;
+    let ty = 25;
+    for (const talk of talks) {
+        if (!talk.title)
+            continue;
 
-                let imgData = null;
-                let imgW = 0, imgH = 0;
+        let imgData = null;
+        let imgW = 0, imgH = 0;
 
-                if (talk.image_url) {
-                    try {
-                        imgData = await this._loadImageAsBase64(talk.image_url);
-                        const dims = await getImageDimensions(imgData);
-                        imgW = 32;
-                        imgH = dims.height * (imgW / dims.width);
-                    } catch (e) { }
-                }
+        if (talk.image_url) {
+            try {
+                imgData = await this._loadImageAsBase64(talk.image_url);
+                const dims = await getImageDimensions(imgData);
+                imgW = 32;
+                imgH = dims.height * (imgW / dims.width);
+            } catch (e) { }
+        }
 
-                pdf.setFontSize(11);
-                const textContent = talk.title  || talk.abstract || '';
-                const textX = margin + (imgData ? imgW + 10 : 0);
-                const textW = pageW - margin - textX;
-                const lines = pdf.splitTextToSize(textContent.replace(/<br\s*\/?>/gi, '\n'), textW);
-                const requiredH = Math.max(imgH, lines.length * 5 + 2);
+        const textX = margin + (imgData ? imgW + 10 : 0);
+        const textW = pageW - margin - textX;
 
-                if (ty + requiredH > pageH - margin - 15) {
-                    drawFooter();
-                    pdf.addPage('a4', 'portrait');
-                    drawHeader('Featured Sessions & Talks');
-                    ty = 25;
-                }
+        pdf.setFontSize(11);
+        pdf.setFont('helvetica', 'normal');
 
-                if (imgData) {
-                    pdf.addImage(imgData, 'JPEG', margin, ty, imgW, imgH);
-                }
+        // --- NEW LOGIC: Build the text block array ---
+        let contentLines = [];
 
-                pdf.setFont('helvetica', 'bold');
-                pdf.setFontSize(14);
-                let tType = (talk.type || 'Session').toUpperCase().replace('_', ' ');
-                let headerTxt = `${tType}`;
-                if (talk.speaker || talk.speakers) {
-                    const speakers = Array.isArray(talk.speakers) ? talk.speakers.join(', ') : talk.speaker;
-                    headerTxt += `: ${speakers}`;
-                } else if (talk.moderator) {
-                    headerTxt += ` (Moderated by ${talk.moderator})`;
-                }
+        // 1. Process the Title
+        const titleLines = pdf.splitTextToSize(talk.title.replace(/<br\s*\/?>/gi, '\n'), textW);
+        contentLines.push(...titleLines);
 
-                pdf.text(headerTxt, textX, ty + 4);
-
-                pdf.setFontSize(11);
-                pdf.setFont('helvetica', 'normal');
-                pdf.text(lines, textX, ty + 10);
-
-                ty += requiredH + 8;
+        // Helper to format, wrap, and truncate sections
+        const processSection = (caption, text, maxLines) => {
+            if (!text) return;
+            
+            contentLines.push(''); // Add an empty line for visual spacing between sections
+            
+            // Clean up any stray HTML breaks and newlines to make it flow smoothly
+            const cleanText = text.replace(/<br\s*\/?>/gi, ' ').replace(/\n/g, ' ').trim();
+            const lines = pdf.splitTextToSize(`${caption} ${cleanText}`, textW);
+            
+            if (lines.length > maxLines) {
+                let truncated = lines.slice(0, maxLines);
+                // Chop off the last 3 characters of the final line and add '...' to avoid margin overflow
+                truncated[maxLines - 1] = truncated[maxLines - 1].slice(0, -3) + '...';
+                contentLines.push(...truncated);
+            } else {
+                contentLines.push(...lines);
             }
-            drawFooter();
         };
+
+        // 2. Process the Abstract (Limited to 3 lines)
+        processSection('Abstract:', talk.abstract, 3);
+
+        // 3. Process the Bio (Limited to 3 lines)
+        processSection('Bio:', talk.bio, 3);
+
+        // --- Calculate heights and handle page breaks ---
+        // Header is at +4, text starts at +10. Each text line is ~5 units high.
+        const textTotalHeight = 10 + (contentLines.length * 5);
+        const requiredH = Math.max(imgH, textTotalHeight);
+
+        if (ty + requiredH > pageH - margin - 15) {
+            drawFooter();
+            pdf.addPage('a4', 'portrait');
+            drawHeader('Featured Sessions & Talks');
+            ty = 25;
+        }
+
+        // --- Render the content ---
+        if (imgData) {
+            pdf.addImage(imgData, 'JPEG', margin, ty, imgW, imgH);
+        }
+
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(14);
+        let tType = (talk.type || 'Session').toUpperCase().replace('_', ' ');
+        let headerTxt = `${tType}`;
+        if (talk.speaker || talk.speakers) {
+            const speakers = Array.isArray(talk.speakers) ? talk.speakers.join(', ') : talk.speaker;
+            headerTxt += `: ${speakers}`;
+        } else if (talk.moderator) {
+            headerTxt += ` (Moderated by ${talk.moderator})`;
+        }
+
+        // Print Header (Talk Type / Speaker)
+        pdf.text(headerTxt, textX, ty + 4);
+
+        // Print the built content (Title, Abstract, Bio)
+        pdf.setFontSize(11);
+        pdf.setFont('helvetica', 'normal');
+        pdf.text(contentLines, textX, ty + 10);
+
+        ty += requiredH + 8;
+    }
+    drawFooter();
+};
 
         // ---------------- SCHEDULE (LANDSCAPE) ----------------
         await drawCoverPage();
