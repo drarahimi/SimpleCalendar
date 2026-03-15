@@ -2633,7 +2633,7 @@ l-293 293 -5 551 -5 551 -24 19 c-30 24 -72 24 -102 0z"/>
                 }
 
                 pdf.setFontSize(11);
-                const textContent = talk.abstract || talk.title || '';
+                const textContent = talk.title  || talk.abstract || '';
                 const textX = margin + (imgData ? imgW + 10 : 0);
                 const textW = pageW - margin - textX;
                 const lines = pdf.splitTextToSize(textContent.replace(/<br\s*\/?>/gi, '\n'), textW);
