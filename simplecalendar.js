@@ -1104,79 +1104,79 @@ l-293 293 -5 551 -5 551 -24 19 c-30 24 -72 24 -102 0z"/>
         this._attachEventMountHandlers();
     }
 
-renderTimesColumn() {
-    let html = `<div class="sticky top-0 bg-white z-2 pt-0">`;
+    renderTimesColumn() {
+        let html = `<div class="sticky top-0 bg-white z-2 pt-0">`;
 
-    const startMinutes = this.slotMinMinutes;
-    const endMinutes   = this.slotMaxMinutes;
+        const startMinutes = this.slotMinMinutes;
+        const endMinutes = this.slotMaxMinutes;
 
-    // measure a natural height for the hour label
-    const temp = document.createElement('div');
-    temp.className = 'sc-hour-label text-xs text-gray-500';
-    temp.style.position = 'absolute';
-    temp.style.visibility = 'hidden';
-    temp.innerText = '12 PM';
-    document.body.appendChild(temp);
-    const hourLabelHeight = temp.offsetHeight;
-    document.body.removeChild(temp);
+        // measure a natural height for the hour label
+        const temp = document.createElement('div');
+        temp.className = 'sc-hour-label text-xs text-gray-500';
+        temp.style.position = 'absolute';
+        temp.style.visibility = 'hidden';
+        temp.innerText = '12 PM';
+        document.body.appendChild(temp);
+        const hourLabelHeight = temp.offsetHeight;
+        document.body.removeChild(temp);
 
-    const hourBlockHeight = this.hourHeightPx;
+        const hourBlockHeight = this.hourHeightPx;
 
-    // one half hour must fit between two hour labels
-    const halfHourHeight = hourBlockHeight - hourLabelHeight * 2;
+        // one half hour must fit between two hour labels
+        const halfHourHeight = hourBlockHeight - hourLabelHeight * 2;
 
-    for (let m = startMinutes; m <= endMinutes; m += 30) {
+        for (let m = startMinutes; m <= endMinutes; m += 30) {
 
-        const hour = Math.floor(m / 60);
-        const minute = m % 60;
+            const hour = Math.floor(m / 60);
+            const minute = m % 60;
 
-        const dt = this.currentDate.set({
-            hour,
-            minute,
-            second: 0,
-            millisecond: 0
-        });
+            const dt = this.currentDate.set({
+                hour,
+                minute,
+                second: 0,
+                millisecond: 0
+            });
 
-        if (minute === 0) {
+            if (minute === 0) {
 
-            // top-of-hour label
-            const label = dt.toFormat(this.options.slotLabelFormat);
+                // top-of-hour label
+                const label = dt.toFormat(this.options.slotLabelFormat);
 
-            html += `
+                html += `
                 <div class="sc-hour-label text-xs text-gray-500"
                      style="height:${hourLabelHeight}px; line-height:${hourLabelHeight}px;">
                     ${label}
                 </div>
             `;
 
-        } else {
+            } else {
 
-            // 30 minute region
-            const halfLabel = dt.toFormat(this.options.slotLabelFormat);
+                // 30 minute region
+                const halfLabel = dt.toFormat(this.options.slotLabelFormat);
 
-            // half hour block between two hour labels
-            html += `
+                // half hour block between two hour labels
+                html += `
                 <div class="sc-hour-label text-xs text-gray-500"
                      style="height:${halfHourHeight}px; line-height:${halfHourHeight}px;">
                     ${halfLabel}
                 </div>
             `;
 
-            // bottom-of-hour label for the same hour block
-            const bottomHourLabel = dt.plus({ hours: 1 }).set({ minute: 0 }).toFormat(this.options.slotLabelFormat);
+                // bottom-of-hour label for the same hour block
+                const bottomHourLabel = dt.plus({ hours: 1 }).set({ minute: 0 }).toFormat(this.options.slotLabelFormat);
 
-            html += `
+                html += `
                 <div class="sc-hour-label text-xs text-gray-500"
                      style="height:${hourLabelHeight}px; line-height:${hourLabelHeight}px;">
                     ${bottomHourLabel}
                 </div>
             `;
+            }
         }
-    }
 
-    html += `</div>`;
-    return html;
-}
+        html += `</div>`;
+        return html;
+    }
 
 
 
@@ -1628,267 +1628,981 @@ renderTimesColumn() {
         return variations;
     }
 
+    // async generateProgramPdf() {
+    //     if (this.isGeneratingPdf) return;
+    //     this.isGeneratingPdf = true;
+    //     this.updatePdfButtonState();
+
+    //     const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    //     pdf.setDisplayMode('fullheight', 'continuous', 'UseOutlines');
+    //     const margin = this.options.pdf.margin || 15;
+    //     const overlayMargin = this.options.pdf.overlayMargin || 5;
+    //     const overlayOpacity = this.options.pdf.overlayOpacity || 0.85;
+    //     const pageW = pdf.internal.pageSize.getWidth();
+    //     const pageH = pdf.internal.pageSize.getHeight();
+    //     const innerW = pageW - margin * 2;
+    //     const maxLogoW = this.options.pdf.maxLogoWidth || 30;
+    //     const maxLogoH = this.options.pdf.maxLogoHeight || 30;
+    //     let y = margin;
+
+    //     // Load background
+    //     let bg = null;
+    //     if (this.options.pdf.backgroundUrl) {
+    //         bg = await this._loadImageAsBase64(this.options.pdf.backgroundUrl);
+    //     }
+    //     // Add Bookmark for PDF Outline
+    //     const addBookmark = (title, parent = null) => {
+    //         // Get the current page number
+    //         const pageIndex = pdf.internal.getNumberOfPages();
+
+    //         //console.log(`${title} -> # ${pageIndex}`);
+
+    //         // Create a destination object with pageNumber and y-coordinate (e.g., top of the page, 0)
+    //         // Note: The y-coordinate might be ignored by some viewers, but page number should work.
+    //         const destination = {
+    //             pageNumber: pageIndex,
+    //             y: 0 // You can specify a y position, e.g., 0 for top of the page
+    //         };
+
+    //         // Add the bookmark using the destination object
+    //         pdf.outline.add(parent, title, destination);
+    //     };
+    //     // Draw background
+    //     // Helper function for random number generation
+    //     const getRandom = (min, max) => Math.random() * (max - min) + min;
+
+    //     // Define a modern, harmonious color palette (e.g., professional blues, grays, and a pop of accent color)
+    //     var fillColor = this._hexToRgb(this.options.pdf.fillColor);
+    //     const palette = this._generatePalette(fillColor, 15);
+
+    //     const drawBackground = () => {
+    //         // 1. Draw the base page background color
+    //         const baseColor = this._hexToRgb(this.options.pdf.backgroundColor);
+    //         pdf.setFillColor(baseColor.r, baseColor.g, baseColor.b);
+    //         pdf.rect(0, 0, pageW, pageH, 'F');
+
+    //         // Reset opacity to 1 before adding images or overlay
+    //         pdf.setGState(pdf.GState({ opacity: 1 }));
+
+    //         if (bg) {
+    //             // Add optional background image on top of the shapes if needed
+    //             pdf.addImage(bg, 'JPEG', 0, 0, pageW, pageH);
+    //         }
+
+
+    //         // 2. Add random, harmonious geometric shapes
+    //         const numShapes = 15; // Number of shapes to draw
+    //         for (let i = 0; i < numShapes; i++) {
+    //             // Select a random color from the palette
+    //             const color = palette[Math.floor(Math.random() * palette.length)];
+    //             pdf.setFillColor(color.r, color.g, color.b);
+
+    //             // Set a low opacity so they blend into the background (e.g., 0.1 to 0.4)
+    //             const shapeOpacity = getRandom(0.1, 0.4);
+    //             pdf.setGState(pdf.GState({ opacity: shapeOpacity }));
+
+    //             // Random position and size
+    //             const x = getRandom(0, pageW);
+    //             const y = getRandom(0, pageH);
+    //             const width = getRandom(20, 150);
+    //             const height = getRandom(20, 150);
+
+    //             // Draw a rectangle or a square randomly
+    //             if (Math.random() > 0.5) {
+    //                 pdf.rect(x, y, width, height, 'F'); // Filled rectangle
+    //             } else {
+    //                 pdf.rect(x, y, Math.min(width, height), Math.min(width, height), 'F'); // Square
+    //             }
+    //         }
+
+    //     };
+
+    //     // White translucent overlay
+    //     const drawOverlay = () => {
+    //         // setGState usage depends on your jsPDF build; this matches your earlier usage
+    //         try {
+    //             pdf.setFillColor(255, 255, 255);
+    //             pdf.setDrawColor(255, 255, 255);
+    //             pdf.setGState(pdf.GState({ opacity: overlayOpacity }));
+    //             pdf.rect(
+    //                 overlayMargin,
+    //                 overlayMargin,
+    //                 pageW - overlayMargin * 2,
+    //                 pageH - overlayMargin * 2,
+    //                 'F'
+    //             );
+    //             pdf.setGState(pdf.GState({ opacity: 1 }));
+    //         } catch (err) {
+    //             // fallback: semi-opaque overlay using RGB fill without gState if not supported
+    //             pdf.setFillColor(255, 255, 255);
+    //             pdf.rect(
+    //                 overlayMargin,
+    //                 overlayMargin,
+    //                 pageW - overlayMargin * 2,
+    //                 pageH - overlayMargin * 2,
+    //                 'F'
+    //             );
+    //         }
+    //     };
+
+    //     // Header
+    //     const drawHeader = (title) => {
+    //         drawBackground();
+    //         drawOverlay();
+    //         pdf.setFont('helvetica', 'bold');
+    //         pdf.setFontSize(18);
+    //         pdf.text(title, margin, 12);
+    //         pdf.setDrawColor(0, 0, 0);   // r, g, b
+    //         pdf.setLineWidth(0.25); pdf.setLineWidth(0.2);
+    //         pdf.line(margin, 14, pageW - margin, 14);
+    //         pdf.setFont('helvetica', 'normal');
+    //     };
+
+    //     // Footer
+    //     const drawFooter = () => {
+    //         const ftxt = this.options.pdf.footerText || 'Generated by SimpleCalendar';
+    //         pdf.setFont('helvetica', 'bold');
+    //         pdf.setFontSize(10);
+    //         pdf.text(ftxt, margin, pageH - 8);
+    //         var pageNum = pdf.internal.getNumberOfPages() - 1;
+    //         pdf.text(
+    //             String(pageNum),
+    //             pageW - margin,
+    //             pageH - 8,
+    //             { align: 'right' }
+    //         );
+    //         pdf.setFont('helvetica', 'normal');
+    //     };
+
+    //     const drawCoverPage = async () => {
+    //         //console.log(this.options)
+    //         const title = this.options.pdf.cover.title || 'Title';
+    //         const subtitle = this.options.pdf.cover.subtitle || 'SubTitle';
+    //         const extraLines = this.options.pdf.cover.extraLines || [
+    //             "Line 1",
+    //             "Line 2"
+    //         ];
+    //         const dates = this.options.pdf.cover.dates || 'Dates';
+    //         const location = this.options.pdf.cover.location || 'Location';
+    //         drawBackground();
+    //         drawOverlay();
+
+    //         const parts = [];
+
+    //         parts.push({ type: 'text', size: 20, text: title });
+    //         parts.push({ type: 'text', size: 32, text: subtitle });
+    //         extraLines.forEach(t => {
+    //             parts.push({ type: 'text', size: 20, text: t });
+    //         });
+    //         parts.push({ type: 'text', size: 14, text: dates });
+    //         parts.push({ type: 'text', size: 14, text: location });
+
+    //         // Logo (handled after size calculation)
+    //         let logoData = null;
+    //         let logoW = 0;
+    //         let logoH = 0;
+
+    //         if (this.options.pdf.logoUrl) {
+    //             logoData = await this._loadImageAsBase64(this.options.pdf.logoUrl);
+    //             const img = new Image();
+    //             img.src = logoData;
+    //             await new Promise(res => img.onload = res);
+
+    //             const natW = img.width || 1;
+    //             const natH = img.height || 1;
+
+    //             logoW = maxLogoW;
+    //             logoH = natH * (logoW / natW);
+
+    //             if (logoH > maxLogoH) {
+    //                 logoH = maxLogoH;
+    //                 logoW = natW * (logoH / natH);
+    //             }
+
+    //             parts.push({ type: 'image', width: logoW, height: logoH, data: logoData });
+    //         }
+
+    //         // Compute total height
+    //         let totalH = 0;
+    //         parts.forEach(p => {
+    //             if (p.type === 'text') totalH += p.size + 6;
+    //             if (p.type === 'image') totalH += p.height + 10;
+    //         });
+
+    //         const startY = (pageH - totalH) / 2;
+
+    //         // Draw
+    //         let y = startY;
+
+    //         for (const p of parts) {
+    //             if (p.type === 'text') {
+    //                 pdf.setFontSize(p.size);
+    //                 pdf.setFont('helvetica', 'bold');
+    //                 const lines = pdf.splitTextToSize(p.text, pageW - margin * 4);
+    //                 pdf.text(lines, pageW / 2, y, { align: 'center' });
+    //                 //pdf.text(p.text, pageW / 2, y, { align: 'center' });
+    //                 y += p.size + 6;
+    //             }
+    //             if (p.type === 'image') {
+    //                 pdf.addImage(p.data, 'PNG', (pageW - p.width) / 2, y, p.width, p.height);
+    //                 y += p.height + 10;
+    //             }
+    //         }
+
+    //         //drawFooter();
+    //     }
+    //     const drawWelcomePage = async () => {
+    //         let y = margin;
+    //         const title = this.options.pdf.welcome.title || 'Welcome';
+    //         const message = this.options.pdf.welcome.message || 'Welcome to this event';
+
+    //         drawBackground();
+    //         drawOverlay();
+
+    //         if (title) {
+    //             pdf.setFontSize(28);
+    //             pdf.setFont('helvetica', 'bold');
+    //             pdf.text(title, pageW / 2, y, { align: 'center' });
+    //             y += 20;
+    //         }
+
+    //         pdf.setFontSize(14);
+    //         pdf.setFont('helvetica', 'normal');
+    //         const lines = pdf.splitTextToSize(message, pageW - margin * 2);
+    //         pdf.text(lines, margin, y);
+
+    //         drawFooter();
+    //     }
+
+    //     await drawCoverPage();
+    //     addBookmark('Cover'); // parent=null, title, page number
+
+
+    //     pdf.addPage();
+
+    //     await drawWelcomePage();
+    //     addBookmark('Welcome'); // parent=null, title, page number
+
+
+    //     //pdf.addPage();
+
+    //     // -------------------------------
+    //     // Columns + column positions (ensure `col` is defined)
+    //     // -------------------------------
+    //     const columns = this.options.pdf.columns || [
+    //         { label: 'Time', key: 'timerange', width: 20 },
+    //         { label: 'Title', key: 'title', width: 50 },
+    //         { label: 'Speaker', key: 'speaker', width: 30 }
+    //     ];
+
+    //     const col = [];
+    //     let curX = margin;
+    //     columns.forEach(c => {
+    //         const w = innerW * (c.width / 100);
+    //         col.push({ ...c, x: curX, w });
+    //         curX += w;
+    //     });
+
+    //     // -------------------------------
+    //     // Group events by day
+    //     // -------------------------------
+    //     const eventsByDay = {};
+    //     (this.events || []).forEach(ev => {
+    //         const d = this._luxonToIso(ev.startDate).split('T')[0];
+    //         if (!eventsByDay[d]) eventsByDay[d] = [];
+    //         eventsByDay[d].push(ev);
+    //     });
+    //     const days = Object.keys(eventsByDay).sort();
+
+    //     // -------------------------------
+    //     // Start Program Schedule page
+    //     // -------------------------------
+    //     pdf.addPage();
+    //     addBookmark('Program Schedule'); // parent=null, title, page number
+
+    //     drawHeader('Program Schedule');
+    //     y = 18;
+
+    //     // Draw table header once per page
+    //     const drawTableHeader = () => {
+    //         pdf.setFont('helvetica', 'bold');
+    //         pdf.setFontSize(12);
+    //         col.forEach(c => pdf.text(c.label, c.x, y));
+    //         y += 2;
+    //         pdf.setDrawColor(0, 0, 0);   // r, g, b
+    //         pdf.setLineWidth(0.15);
+    //         pdf.line(margin, y, margin + innerW, y);
+    //         pdf.setFont('helvetica', 'normal');
+    //         y += 6;
+    //     };
+
+    //     drawTableHeader();
+
+    //     // ensureSpace will add footer to current page, then start a new page and header
+    //     const ensureSpace = (h) => {
+    //         if (y + h > pageH - 10) {
+    //             // footer for the page we are leaving
+    //             drawFooter();
+    //             // start new page
+    //             pdf.addPage();
+    //             drawHeader('Program Schedule');
+    //             y = 18;
+    //             drawTableHeader();
+    //         }
+    //     };
+
+    //     // -------------------------------
+    //     // Loop through days without forcing a new page per day
+    //     // -------------------------------
+    //     days.forEach((day) => {
+    //         const list = eventsByDay[day].slice().sort((a, b) => a.startDate - b.startDate);
+    //         if (!list.length) return;
+
+    //         const dateStr = list[0].startDate.toFormat(this.options.pdf.longDateFormat || 'DDD');
+
+    //         // Day title - ensure space for title
+    //         ensureSpace(12);
+    //         pdf.setFont('helvetica', 'bold');
+    //         pdf.setFontSize(14);
+    //         y += 8;
+    //         pdf.text(dateStr, margin, y);
+    //         pdf.setFont('helvetica', 'normal');
+    //         y += 8;
+    //         pdf.setFontSize(12);
+
+    //         // Events for the day
+    //         list.forEach((ev, evIndex) => {
+    //             const row = {
+    //                 timerange:
+    //                     ev.startDate.toFormat(this.options.pdf.timeLabelFormat)
+    //                     + '-'
+    //                     + ev.endDate.toFormat(this.options.pdf.timeLabelFormat),
+
+    //                 title: this.htmlToText(ev.title + (ev.subtitle ? `: ${ev.subtitle}` : '') + (ev.note ? `\n${ev.note}` : '')) || '',
+
+    //                 speaker: ev.speaker || ev.details?.speaker || '',
+    //                 moderator: ev.moderator || ev.details?.moderator || '',
+    //                 room: ev.room || ev.details?.room || ''
+    //             };
+
+    //             // Calculate wrapped text and row height
+    //             const wrapped = {};
+    //             let rowHeight = 6;
+    //             col.forEach(c => {
+    //                 const text = row[c.key] || '';
+    //                 wrapped[c.key] = pdf.splitTextToSize(text, c.w - 2);
+    //                 const h = wrapped[c.key].length * 6;
+    //                 if (h > rowHeight) rowHeight = h;
+    //             });
+
+    //             // Page break if needed for the row
+    //             ensureSpace(rowHeight);
+
+    //             // Draw line **above the text**
+    //             const fillColor = this._hexToRgb(this.options.pdf.fillColor);
+    //             pdf.setDrawColor(fillColor.r, fillColor.g, fillColor.b);
+    //             pdf.setLineWidth(0.15);
+    //             pdf.line(margin, y, margin + innerW, y); // draw at current y before text
+
+    //             // Draw row text
+    //             col.forEach(c => {
+    //                 pdf.text(wrapped[c.key], c.x, y + 4);
+    //             });
+
+    //             y += rowHeight;
+    //         });
+
+    //         // small gap after a day's events
+    //         y += 4;
+    //     });
+
+    //     // Draw footer for the final schedule page
+    //     drawFooter();
+
+    //     const drawClosing = async () => {
+    //         let y = margin;
+    //         const title = this.options.pdf.closing.title || 'Closing Title';
+    //         const message = this.options.pdf.closing.message || 'Closing Message';
+
+    //         drawBackground();
+    //         drawOverlay();
+
+    //         if (title) {
+    //             pdf.setFontSize(28);
+    //             pdf.setFont('helvetica', 'bold');
+    //             pdf.text(title, pageW / 2, y, { align: 'center' });
+    //             y += 20;
+    //         }
+
+    //         pdf.setFontSize(14);
+    //         pdf.setFont('helvetica', 'normal');
+    //         const lines = pdf.splitTextToSize(message, pageW - margin * 2);
+    //         pdf.text(lines, margin, y);
+
+    //         drawFooter();
+    //     }
+
+    //     pdf.addPage();
+    //     addBookmark('Closing Remarks'); // parent=null, title, page number
+
+    //     await drawClosing();
+
+    //     const drawCommittee = async () => {
+    //         const colGap = this.options.pdf.committee.colGap || 10;
+
+    //         // Automatically choose 2 or 3 columns unless user forces it
+    //         const columns = this.options.pdf.committee.columns || (pageW > pageH ? 3 : 2);
+
+    //         const colW = (pageW - margin * 2 - (columns - 1) * colGap) / columns;
+    //         const cardH = this.options.pdf.committee.cardHeight || 55;     // Height per entry
+
+    //         const title = this.options.pdf.committee.title || 'Committee';
+    //         const message = this.options.pdf.committee.message || 'Committee Message';
+
+    //         if (typeof drawHeader === 'function') drawHeader(title);  // Assuming drawHeader is globally available
+
+    //         let x = margin;
+    //         let y = margin + 4;
+
+    //         pdf.setFontSize(14);
+    //         pdf.setFont('helvetica', 'normal');
+    //         const lines = pdf.splitTextToSize(message, pageW - margin * 2);
+    //         const dims = pdf.getTextDimensions("Hello world");
+    //         pdf.text(lines, margin, y);
+    //         y += dims.h * lines.length;
+
+    //         for (const member of this.options.pdf.committee.list) {
+
+    //             // New page if needed
+    //             if (y + cardH > pageH - margin) {
+    //                 pdf.addPage();
+    //                 y = margin;
+    //             }
+
+    //             // Text positions
+    //             const tx = x;
+    //             let ty = y + 4;
+
+    //             pdf.setFontSize(12);
+    //             pdf.setFont('Helvetica', 'bold');
+    //             //console.info(member.name + ', ' + tx + ', ' + ty)
+    //             pdf.text(member.name, tx, ty);
+
+    //             ty += 5;
+    //             pdf.setFont('Helvetica', 'normal');
+    //             pdf.text(member.role, tx, ty);
+
+    //             ty += 5;
+    //             pdf.text(member.affiliation, tx, ty);
+
+    //             if (member.location) {
+    //                 ty += 5;
+    //                 pdf.text(member.location, tx, ty);
+    //             }
+
+    //             // if (member.email) {
+    //             //     ty += 5;
+    //             //     pdf.setFontSize(9);
+    //             //     pdf.text(member.email, tx, ty);
+    //             // }
+
+    //             // Next column
+    //             x += colW + colGap;
+
+    //             // If end of row, reset x and move y down
+    //             if (x + colW > pageW - margin) {
+    //                 x = margin;
+    //                 y += cardH + 8;
+    //                 //console.error(`passed height, recalculating to... ${x}, ${y}`)
+    //             }
+    //         }
+    //         drawFooter();
+    //     }
+
+    //     pdf.addPage();
+    //     addBookmark('Committee'); // parent=null, title, page number
+    //     await drawCommittee();
+
+    //     const drawSponsors = async () => {
+    //         const colGap = this.options.pdf.sponsors.colGap || 10;
+
+    //         // Auto choose columns unless user forces it
+    //         const columns = this.options.pdf.sponsors.columns || (pageW > pageH ? 3 : 2);
+
+    //         const colW = (pageW - margin * 2 - (columns - 1) * colGap) / columns;
+
+    //         // Height per card, taller than committee because of logos
+    //         const cardH = this.options.pdf.sponsors.cardHeight || 70;
+
+    //         const title = this.options.pdf.sponsors.title || "Sponsors";
+    //         const message = this.options.pdf.sponsors.message || 'Closing Message';
+
+    //         if (typeof drawHeader === "function") {
+    //             drawHeader(title);
+    //         }
+
+    //         let x = margin;
+    //         let y = margin + 4;
+
+    //         pdf.setFontSize(14);
+    //         pdf.setFont('helvetica', 'normal');
+    //         const lines = pdf.splitTextToSize(message, pageW - margin * 2);
+    //         const dims = pdf.getTextDimensions("Hello world");
+    //         pdf.text(lines, margin, y);
+    //         y += dims.h * lines.length;
+
+    //         for (const sponsor of this.options.pdf.sponsors.list) {
+    //             if (sponsor.level) {// Start a new page if card wont fit
+    //                 if (y + cardH > pageH - margin) {
+    //                     pdf.addPage();
+    //                     y = margin;
+    //                 }
+
+    //                 // Draw sponsor logo if available
+    //                 let maxImgW = 40; // maximum width
+    //                 let maxImgH = 20; // maximum height
+    //                 let imgH = 20;
+    //                 let imgW = 40;
+    //                 let imgX = x;
+    //                 let imgY = y;
+
+    //                 if (sponsor.image_url) {
+    //                     try {
+    //                         const imgData = await this._loadImageAsBase64(sponsor.image_url);
+
+    //                         // Create an Image object to get original dimensions
+    //                         const img = new Image();
+    //                         img.src = imgData;
+
+    //                         await new Promise((resolve, reject) => {
+    //                             img.onload = resolve;
+    //                             img.onerror = reject;
+    //                         });
+
+    //                         // Calculate aspect ratio
+    //                         const ratio = Math.min(maxImgW / img.width, maxImgH / img.height);
+    //                         const imgW = img.width * ratio;
+    //                         const imgH = img.height * ratio;
+
+    //                         pdf.addImage({
+    //                             imageData: imgData,
+    //                             format: "PNG",
+    //                             x: imgX,
+    //                             y: imgY,
+    //                             width: imgW,
+    //                             height: imgH
+    //                         });
+
+    //                     } catch (err) {
+    //                         console.warn("Failed to load sponsor logo", sponsor.image_url, err);
+    //                     }
+    //                 }
+
+
+    //                 // Text content
+    //                 let tx = x;
+    //                 let ty = y + imgH + 5;
+
+    //                 pdf.setFontSize(12);
+    //                 pdf.setFont("Helvetica", "bold");
+    //                 pdf.text(sponsor.name, tx, ty);
+
+    //                 pdf.setFont("Helvetica", "normal");
+    //                 pdf.setFontSize(10);
+
+    //                 if (sponsor.level) {
+    //                     ty += 5;
+    //                     pdf.text(`${sponsor.level} sponsor`, tx, ty);
+    //                 }
+
+    //                 // if (sponsor.type) {
+    //                 //     ty += 5;
+    //                 //     pdf.text(`Type: ${sponsor.type}`, tx, ty);
+    //                 // }
+
+    //                 if (sponsor.website) {
+    //                     ty += 5;
+    //                     pdf.setFontSize(9);
+
+    //                     // Draw the clickable link
+    //                     pdf.textWithLink(sponsor.website, tx, ty, { url: sponsor.website });
+
+    //                     // Draw underline
+    //                     const textWidth = pdf.getTextWidth(sponsor.website);
+    //                     const lineY = ty + 1; // a little below the text
+    //                     pdf.setLineWidth(0.2);
+    //                     pdf.line(tx, lineY, tx + textWidth, lineY);
+    //                 }
+
+
+    //                 // Move to next column
+    //                 x += colW + colGap;
+
+    //                 // If next card would overflow row width, wrap to next row
+    //                 if (x + colW > pageW - margin) {
+    //                     x = margin;
+    //                     y += cardH + 8;
+    //                 }
+    //             }
+    //         }
+
+    //         drawFooter();
+    //     };
+
+    //     pdf.addPage();
+    //     addBookmark('Sponsors'); // parent=null, title, page number
+    //     await drawSponsors();
+
+    //     this.isGeneratingPdf = false;
+    //     this.updatePdfButtonState();
+    //     pdf.save((this.options?.pdf?.programFilename ?? 'Conference_Program.pdf') + '.pdf');
+    // }
+
     async generateProgramPdf() {
         if (this.isGeneratingPdf) return;
         this.isGeneratingPdf = true;
         this.updatePdfButtonState();
 
-        const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
         pdf.setDisplayMode('fullheight', 'continuous', 'UseOutlines');
+
         const margin = this.options.pdf.margin || 15;
         const overlayMargin = this.options.pdf.overlayMargin || 5;
-        const overlayOpacity = this.options.pdf.overlayOpacity || 0.85;
-        const pageW = pdf.internal.pageSize.getWidth();
-        const pageH = pdf.internal.pageSize.getHeight();
-        const innerW = pageW - margin * 2;
-        const maxLogoW = this.options.pdf.maxLogoWidth || 30;
-        const maxLogoH = this.options.pdf.maxLogoHeight || 30;
-        let y = margin;
+        const overlayOpacity = this.options.pdf.overlayOpacity || 0.96;
 
-        // Load background
-        let bg = null;
-        if (this.options.pdf.backgroundUrl) {
-            bg = await this._loadImageAsBase64(this.options.pdf.backgroundUrl);
-        }
-        // Add Bookmark for PDF Outline
-        const addBookmark = (title, parent = null) => {
-            // Get the current page number
-            const pageIndex = pdf.internal.getNumberOfPages();
+        let pageW = pdf.internal.pageSize.getWidth();
+        let pageH = pdf.internal.pageSize.getHeight();
+        let innerW = pageW - margin * 2;
 
-            //console.log(`${title} -> # ${pageIndex}`);
-
-            // Create a destination object with pageNumber and y-coordinate (e.g., top of the page, 0)
-            // Note: The y-coordinate might be ignored by some viewers, but page number should work.
-            const destination = {
-                pageNumber: pageIndex,
-                y: 0 // You can specify a y position, e.g., 0 for top of the page
-            };
-
-            // Add the bookmark using the destination object
-            pdf.outline.add(parent, title, destination);
+        const updateDimensions = () => {
+            pageW = pdf.internal.pageSize.getWidth();
+            pageH = pdf.internal.pageSize.getHeight();
+            innerW = pageW - margin * 2;
         };
-        // Draw background
-        // Helper function for random number generation
-        const getRandom = (min, max) => Math.random() * (max - min) + min;
 
-        // Define a modern, harmonious color palette (e.g., professional blues, grays, and a pop of accent color)
-        var fillColor = this._hexToRgb(this.options.pdf.fillColor);
-        const palette = this._generatePalette(fillColor, 15);
+        const getImageDimensions = (base64) => {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve({ width: img.width, height: img.height });
+                img.onerror = reject;
+                img.src = base64;
+            });
+        };
+
+        const addBookmark = (title, parent = null) => {
+            const pageIndex = pdf.internal.getNumberOfPages();
+            pdf.outline.add(parent, title, { pageNumber: pageIndex, y: 0 });
+        };
 
         const drawBackground = () => {
-            // 1. Draw the base page background color
-            const baseColor = this._hexToRgb(this.options.pdf.backgroundColor);
+            const baseColor = this._hexToRgb(this.options.pdf.backgroundColor || '#ffffff');
             pdf.setFillColor(baseColor.r, baseColor.g, baseColor.b);
             pdf.rect(0, 0, pageW, pageH, 'F');
-
-            // Reset opacity to 1 before adding images or overlay
-            pdf.setGState(pdf.GState({ opacity: 1 }));
-
-            if (bg) {
-                // Add optional background image on top of the shapes if needed
-                pdf.addImage(bg, 'JPEG', 0, 0, pageW, pageH);
-            }
-
-
-            // 2. Add random, harmonious geometric shapes
-            const numShapes = 15; // Number of shapes to draw
-            for (let i = 0; i < numShapes; i++) {
-                // Select a random color from the palette
-                const color = palette[Math.floor(Math.random() * palette.length)];
-                pdf.setFillColor(color.r, color.g, color.b);
-
-                // Set a low opacity so they blend into the background (e.g., 0.1 to 0.4)
-                const shapeOpacity = getRandom(0.1, 0.4);
-                pdf.setGState(pdf.GState({ opacity: shapeOpacity }));
-
-                // Random position and size
-                const x = getRandom(0, pageW);
-                const y = getRandom(0, pageH);
-                const width = getRandom(20, 150);
-                const height = getRandom(20, 150);
-
-                // Draw a rectangle or a square randomly
-                if (Math.random() > 0.5) {
-                    pdf.rect(x, y, width, height, 'F'); // Filled rectangle
-                } else {
-                    pdf.rect(x, y, Math.min(width, height), Math.min(width, height), 'F'); // Square
-                }
-            }
-
         };
 
-        // White translucent overlay
         const drawOverlay = () => {
-            // setGState usage depends on your jsPDF build; this matches your earlier usage
             try {
                 pdf.setFillColor(255, 255, 255);
                 pdf.setDrawColor(255, 255, 255);
                 pdf.setGState(pdf.GState({ opacity: overlayOpacity }));
-                pdf.rect(
-                    overlayMargin,
-                    overlayMargin,
-                    pageW - overlayMargin * 2,
-                    pageH - overlayMargin * 2,
-                    'F'
-                );
+                pdf.rect(overlayMargin, overlayMargin, pageW - overlayMargin * 2, pageH - overlayMargin * 2, 'F');
                 pdf.setGState(pdf.GState({ opacity: 1 }));
             } catch (err) {
-                // fallback: semi-opaque overlay using RGB fill without gState if not supported
                 pdf.setFillColor(255, 255, 255);
-                pdf.rect(
-                    overlayMargin,
-                    overlayMargin,
-                    pageW - overlayMargin * 2,
-                    pageH - overlayMargin * 2,
-                    'F'
-                );
+                pdf.rect(overlayMargin, overlayMargin, pageW - overlayMargin * 2, pageH - overlayMargin * 2, 'F');
             }
         };
 
-        // Header
         const drawHeader = (title) => {
             drawBackground();
             drawOverlay();
             pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(18);
+            pdf.setTextColor(0, 0, 0);
             pdf.text(title, margin, 12);
-            pdf.setDrawColor(0, 0, 0);   // r, g, b
-            pdf.setLineWidth(0.25); pdf.setLineWidth(0.2);
+            pdf.setDrawColor(0, 0, 0);
+            pdf.setLineWidth(0.2);
             pdf.line(margin, 14, pageW - margin, 14);
             pdf.setFont('helvetica', 'normal');
         };
 
-        // Footer
         const drawFooter = () => {
-            const ftxt = this.options.pdf.footerText || 'Generated by SimpleCalendar';
+            const ftxt = this.options.pdf.footerText || '';
             pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(10);
+            pdf.setTextColor(0, 0, 0);
             pdf.text(ftxt, margin, pageH - 8);
             var pageNum = pdf.internal.getNumberOfPages() - 1;
-            pdf.text(
-                String(pageNum),
-                pageW - margin,
-                pageH - 8,
-                { align: 'right' }
-            );
+            pdf.text(String(pageNum), pageW - margin, pageH - 8, { align: 'right' });
             pdf.setFont('helvetica', 'normal');
         };
 
+        // ---------------- COVER PAGE ----------------
         const drawCoverPage = async () => {
-            //console.log(this.options)
-            const title = this.options.pdf.cover.title || 'Title';
-            const subtitle = this.options.pdf.cover.subtitle || 'SubTitle';
-            const extraLines = this.options.pdf.cover.extraLines || [
-                "Line 1",
-                "Line 2"
-            ];
-            const dates = this.options.pdf.cover.dates || 'Dates';
-            const location = this.options.pdf.cover.location || 'Location';
-            drawBackground();
-            drawOverlay();
+            // 1. Full Page Background Image with Panning/Scaling options
+            if (this.options.pdf.backgroundUrl) {
+                try {
+                    const bgData = await this._loadImageAsBase64(this.options.pdf.backgroundUrl);
+                    const dims = await getImageDimensions(bgData);
 
-            const parts = [];
+                    const scale = this.options.pdf.cover.imageScale || 1;
+                    const panX = this.options.pdf.cover.panX || 0;
+                    const panY = this.options.pdf.cover.panY || 0;
 
-            parts.push({ type: 'text', size: 20, text: title });
-            parts.push({ type: 'text', size: 32, text: subtitle });
-            extraLines.forEach(t => {
-                parts.push({ type: 'text', size: 20, text: t });
-            });
-            parts.push({ type: 'text', size: 14, text: dates });
-            parts.push({ type: 'text', size: 14, text: location });
+                    // Standard cover fill calculations
+                    const ratio = Math.max(pageW / dims.width, pageH / dims.height);
+                    const imgW = dims.width * ratio * scale;
+                    const imgH = dims.height * ratio * scale;
 
-            // Logo (handled after size calculation)
-            let logoData = null;
-            let logoW = 0;
-            let logoH = 0;
+                    const xOffset = ((pageW - imgW) / 2) + panX;
+                    const yOffset = ((pageH - imgH) / 2) + panY;
 
-            if (this.options.pdf.logoUrl) {
-                logoData = await this._loadImageAsBase64(this.options.pdf.logoUrl);
-                const img = new Image();
-                img.src = logoData;
-                await new Promise(res => img.onload = res);
-
-                const natW = img.width || 1;
-                const natH = img.height || 1;
-
-                logoW = maxLogoW;
-                logoH = natH * (logoW / natW);
-
-                if (logoH > maxLogoH) {
-                    logoH = maxLogoH;
-                    logoW = natW * (logoH / natH);
-                }
-
-                parts.push({ type: 'image', width: logoW, height: logoH, data: logoData });
+                    pdf.addImage(bgData, 'JPEG', xOffset, yOffset, imgW, imgH);
+                } catch (e) { console.warn("Background image failed to load"); }
+            } else {
+                pdf.setFillColor(230, 230, 230);
+                pdf.rect(0, 0, pageW, pageH, 'F');
             }
 
-            // Compute total height
-            let totalH = 0;
-            parts.forEach(p => {
-                if (p.type === 'text') totalH += p.size + 6;
-                if (p.type === 'image') totalH += p.height + 10;
-            });
+            // Theme Color from the design settings
+            const baseRgb = this._hexToRgb(this.options.pdf.backgroundColor || '#002f6c');
+            const themeColor = [baseRgb.r, baseRgb.g, baseRgb.b];
 
-            const startY = (pageH - totalH) / 2;
+            // 2. White Overlay Mask (Overlapping shapes used strictly to prevent PDF render crack artifacts)
+            pdf.setFillColor(255, 255, 255);
+            pdf.setLineWidth(0);
+            pdf.rect(0, 0, 51, pageH, 'F'); // Left column
+            pdf.rect(50, 0, pageW - 50, 41, 'F'); // Top block
+            pdf.triangle(50, 40, pageW, 40, 50, pageH, 'F'); // Diagonal cutoff
 
-            // Draw
-            let y = startY;
+            // Helper to find exact X intersection on the diagonal line
+            const getXonDiagonal = (y) => pageW + (y - 40) * (50 - pageW) / (pageH - 40);
 
-            for (const p of parts) {
-                if (p.type === 'text') {
-                    pdf.setFontSize(p.size);
-                    pdf.setFont('helvetica', 'bold');
-                    const lines = pdf.splitTextToSize(p.text, pageW - margin * 4);
-                    pdf.text(lines, pageW / 2, y, { align: 'center' });
-                    //pdf.text(p.text, pageW / 2, y, { align: 'center' });
-                    y += p.size + 6;
-                }
-                if (p.type === 'image') {
-                    pdf.addImage(p.data, 'PNG', (pageW - p.width) / 2, y, p.width, p.height);
-                    y += p.height + 10;
+            // 3. Left Theme-Colored Vertical Stripe
+            pdf.setFillColor(...themeColor);
+            const stripeX = 16;
+            const stripeW = 10;
+            pdf.rect(stripeX, 0, stripeW, pageH, 'F');
+
+            // 4. Thick Diagonal Accent Line
+            pdf.setDrawColor(...themeColor);
+            pdf.setLineWidth(4);
+            pdf.line(pageW, 40, 50, pageH);
+
+            // 5. Theme-Colored Banner
+            const bannerY = 60;
+            const bannerH = 65;
+            const bannerTopRightX = getXonDiagonal(bannerY);
+            const bannerBotRightX = getXonDiagonal(bannerY + bannerH);
+
+            pdf.setFillColor(...themeColor);
+            // Draw main rect then right triangle to form perfect slant
+            pdf.rect(0, bannerY, bannerBotRightX, bannerH, 'F');
+            pdf.triangle(bannerBotRightX, bannerY, bannerTopRightX, bannerY, bannerBotRightX, bannerY + bannerH, 'F');
+
+            // 6. Bottom Right Corner Accent Triangles
+            pdf.setFillColor(255, 255, 255);
+            pdf.triangle(pageW - 45, pageH, pageW, pageH - 45, pageW, pageH, 'F');
+            pdf.setFillColor(...themeColor);
+            pdf.triangle(pageW - 35, pageH, pageW, pageH - 35, pageW, pageH, 'F');
+
+
+            // ================= TEXT & CONTENT =================
+
+            // 7. Top Right Logos (Small, Right-aligned)
+            const logos = this.options.pdf.cover.logos || [];
+            if (logos.length > 0) {
+                const logoH = 10;
+                const logoSpacing = 10;
+                let currentX = pageW - margin;
+
+                // Draw logos right to left
+                for (let i = logos.length - 1; i >= 0; i--) {
+                    try {
+                        const lData = await this._loadImageAsBase64(logos[i]);
+                        const dims = await getImageDimensions(lData);
+                        const lW = dims.width * (logoH / dims.height);
+                        currentX -= lW;
+                        pdf.addImage(lData, 'PNG', currentX, margin, lW, logoH);
+                        currentX -= logoSpacing;
+                    } catch (e) { }
                 }
             }
 
-            //drawFooter();
-        }
-        const drawWelcomePage = async () => {
-            let y = margin;
-            const title = this.options.pdf.welcome.title || 'Welcome';
-            const message = this.options.pdf.welcome.message || 'Welcome to this event';
+            // 8. Main Title (In Banner)
+            const textLeftMargin = stripeX + stripeW + 14;
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFontSize(28);
+            pdf.setFont('helvetica', 'bold');
+            const titleText = this.options.pdf.cover.title || 'Conference Program';
+            const titleLines = pdf.splitTextToSize(titleText, 140);
 
-            drawBackground();
-            drawOverlay();
+            // Auto vertical align
+            const totalTextH = titleLines.length * 10;
+            const tY = bannerY + (bannerH / 2) - (totalTextH / 2) + 8;
+            pdf.text(titleLines, textLeftMargin, tY);
 
-            if (title) {
-                pdf.setFontSize(28);
-                pdf.setFont('helvetica', 'bold');
-                pdf.text(title, pageW / 2, y, { align: 'center' });
-                y += 20;
+            // 9. Subtitle & Details (Below banner)
+            let dY = 0;
+
+            pdf.setTextColor(0, 0, 0);
+            pdf.setFontSize(22);
+            pdf.setFont('helvetica', 'bold');
+            if (this.options.pdf.cover.subtitle) {
+                const subLines = pdf.splitTextToSize(this.options.pdf.cover.subtitle, pageW - 80);
+                dY = bannerY - subLines.length * 5 - 8;
+                pdf.text(subLines, textLeftMargin, dY);
+
             }
 
+            // if (this.options.pdf.cover.extraLines) {
+            //     pdf.setTextColor(255, 255, 255);
+            //     pdf.setFontSize(10);
+            //     const extraLines = pdf.splitTextToSize(this.options.pdf.cover.extraLines, pageW - 90);
+            //     dY = bannerY + bannerH - extraLines.length* 3 - 4;
+            //     pdf.text(extraLines, textLeftMargin, dY);
+            //     dY += extraLines.length * 5 + 6;
+            // }
+
+            // Location & Dates
+            pdf.setTextColor(0, 0, 0);
             pdf.setFontSize(14);
+            pdf.setFont('helvetica', 'bold');
+            if (this.options.pdf.cover.location) {
+                const locLines = pdf.splitTextToSize(this.options.pdf.cover.location, pageW - 80);
+                dY = bannerY + bannerH + 7;
+                pdf.text(locLines, textLeftMargin, dY);
+                dY += locLines.length * 2 + 3;
+            }
+
+            if (this.options.pdf.cover.dates) {
+                pdf.text(this.options.pdf.cover.dates, textLeftMargin, dY);
+            }
+        };
+
+        // ---------------- WELCOME PAGE ----------------
+        const drawWelcomePage = async () => {
+            let wy = margin + 15;
+            drawBackground();
+            drawOverlay();
+
+            // Set text color explicitly back to Black
+            pdf.setTextColor(0, 0, 0);
+
+            pdf.setFontSize(28);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text(this.options.pdf.welcome.title || 'Welcome', margin, wy);
+            wy += 15;
+
+            let imgW = 0;
+            let textRightMargin = margin;
+
+            if (this.options.pdf.welcome.imageUrl) {
+                try {
+                    const chairImgData = await this._loadImageAsBase64(this.options.pdf.welcome.imageUrl);
+                    const dims = await getImageDimensions(chairImgData);
+
+                    const maxImgW = 55;
+                    const maxImgH = 75;
+                    const ratio = Math.min(maxImgW / dims.width, maxImgH / dims.height);
+                    imgW = dims.width * ratio;
+                    const imgH = dims.height * ratio;
+
+                    const imgX = pageW - margin - imgW;
+                    pdf.addImage(chairImgData, 'PNG', imgX, wy, imgW, imgH);
+                    textRightMargin = margin + imgW + 15;
+                } catch (e) { console.error(e.message) }
+            }
+
+            pdf.setFontSize(11);
             pdf.setFont('helvetica', 'normal');
-            const lines = pdf.splitTextToSize(message, pageW - margin * 2);
-            pdf.text(lines, margin, y);
+            const lines = pdf.splitTextToSize(this.options.pdf.welcome.message || '', pageW - margin - textRightMargin);
+            pdf.text(lines, margin, wy);
 
             drawFooter();
-        }
+        };
 
+        // ---------------- FEATURED TALKS ----------------
+        const drawFeaturedTalks = async () => {
+            const talks = this.options.pdf.featuredTalks || [];
+            if (!talks.length) return;
+
+            pdf.addPage('a4', 'portrait');
+            updateDimensions();
+            addBookmark('Featured Talks');
+            drawHeader('Featured Sessions & Talks');
+
+            let ty = 25;
+            for (const talk of talks) {
+                if (!talk.title)
+                    continue;
+
+                let imgData = null;
+                let imgW = 0, imgH = 0;
+
+                if (talk.image_url) {
+                    try {
+                        imgData = await this._loadImageAsBase64(talk.image_url);
+                        const dims = await getImageDimensions(imgData);
+                        imgW = 32;
+                        imgH = dims.height * (imgW / dims.width);
+                    } catch (e) { }
+                }
+
+                pdf.setFontSize(11);
+                const textContent = talk.abstract || talk.title || '';
+                const textX = margin + (imgData ? imgW + 10 : 0);
+                const textW = pageW - margin - textX;
+                const lines = pdf.splitTextToSize(textContent.replace(/<br\s*\/?>/gi, '\n'), textW);
+                const requiredH = Math.max(imgH, lines.length * 5 + 2);
+
+                if (ty + requiredH > pageH - margin - 15) {
+                    drawFooter();
+                    pdf.addPage('a4', 'portrait');
+                    drawHeader('Featured Sessions & Talks');
+                    ty = 25;
+                }
+
+                if (imgData) {
+                    pdf.addImage(imgData, 'JPEG', margin, ty, imgW, imgH);
+                }
+
+                pdf.setFont('helvetica', 'bold');
+                pdf.setFontSize(14);
+                let tType = (talk.type || 'Session').toUpperCase().replace('_', ' ');
+                let headerTxt = `${tType}`;
+                if (talk.speaker || talk.speakers) {
+                    const speakers = Array.isArray(talk.speakers) ? talk.speakers.join(', ') : talk.speaker;
+                    headerTxt += `: ${speakers}`;
+                } else if (talk.moderator) {
+                    headerTxt += ` (Moderated by ${talk.moderator})`;
+                }
+
+                pdf.text(headerTxt, textX, ty + 4);
+
+                pdf.setFontSize(11);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text(lines, textX, ty + 10);
+
+                ty += requiredH + 8;
+            }
+            drawFooter();
+        };
+
+        // ---------------- SCHEDULE (LANDSCAPE) ----------------
         await drawCoverPage();
-        addBookmark('Cover'); // parent=null, title, page number
-
-
-        pdf.addPage();
-
+        addBookmark('Cover');
+        pdf.addPage('a4', 'portrait');
         await drawWelcomePage();
-        addBookmark('Welcome'); // parent=null, title, page number
+        addBookmark('Welcome');
+        await drawFeaturedTalks();
 
+        pdf.addPage('a4', 'landscape');
+        updateDimensions();
+        addBookmark('Program Schedule');
+        drawHeader('Program Schedule');
 
-        //pdf.addPage();
-
-        // -------------------------------
-        // Columns + column positions (ensure `col` is defined)
-        // -------------------------------
+        let y = 18;
         const columns = this.options.pdf.columns || [
             { label: 'Time', key: 'timerange', width: 20 },
             { label: 'Title', key: 'title', width: 50 },
@@ -1903,9 +2617,6 @@ renderTimesColumn() {
             curX += w;
         });
 
-        // -------------------------------
-        // Group events by day
-        // -------------------------------
         const eventsByDay = {};
         (this.events || []).forEach(ev => {
             const d = this._luxonToIso(ev.startDate).split('T')[0];
@@ -1914,354 +2625,213 @@ renderTimesColumn() {
         });
         const days = Object.keys(eventsByDay).sort();
 
-        // -------------------------------
-        // Start Program Schedule page
-        // -------------------------------
-        pdf.addPage();
-        addBookmark('Program Schedule'); // parent=null, title, page number
-
-        drawHeader('Program Schedule');
-        y = 18;
-
-        // Draw table header once per page
         const drawTableHeader = () => {
             pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(12);
             col.forEach(c => pdf.text(c.label, c.x, y));
             y += 2;
-            pdf.setDrawColor(0, 0, 0);   // r, g, b
+            pdf.setDrawColor(0, 0, 0);
             pdf.setLineWidth(0.15);
             pdf.line(margin, y, margin + innerW, y);
             pdf.setFont('helvetica', 'normal');
             y += 6;
         };
-
         drawTableHeader();
 
-        // ensureSpace will add footer to current page, then start a new page and header
         const ensureSpace = (h) => {
             if (y + h > pageH - 10) {
-                // footer for the page we are leaving
                 drawFooter();
-                // start new page
-                pdf.addPage();
+                pdf.addPage('a4', 'landscape');
                 drawHeader('Program Schedule');
                 y = 18;
                 drawTableHeader();
             }
         };
 
-        // -------------------------------
-        // Loop through days without forcing a new page per day
-        // -------------------------------
         days.forEach((day) => {
             const list = eventsByDay[day].slice().sort((a, b) => a.startDate - b.startDate);
             if (!list.length) return;
 
-            const dateStr = list[0].startDate.toFormat(this.options.pdf.longDateFormat || 'DDD');
-
-            // Day title - ensure space for title
             ensureSpace(12);
             pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(14);
             y += 8;
-            pdf.text(dateStr, margin, y);
+            pdf.text(list[0].startDate.toFormat(this.options.pdf.longDateFormat || 'DDD'), margin, y);
             pdf.setFont('helvetica', 'normal');
             y += 8;
             pdf.setFontSize(12);
 
-            // Events for the day
-            list.forEach((ev, evIndex) => {
+            list.forEach((ev) => {
                 const row = {
-                    timerange:
-                        ev.startDate.toFormat(this.options.pdf.timeLabelFormat)
-                        + '-'
-                        + ev.endDate.toFormat(this.options.pdf.timeLabelFormat),
-
+                    timerange: ev.startDate.toFormat(this.options.pdf.timeLabelFormat) + '-' + ev.endDate.toFormat(this.options.pdf.timeLabelFormat),
                     title: this.htmlToText(ev.title + (ev.subtitle ? `: ${ev.subtitle}` : '') + (ev.note ? `\n${ev.note}` : '')) || '',
-
                     speaker: ev.speaker || ev.details?.speaker || '',
                     moderator: ev.moderator || ev.details?.moderator || '',
                     room: ev.room || ev.details?.room || ''
                 };
 
-                // Calculate wrapped text and row height
                 const wrapped = {};
                 let rowHeight = 6;
                 col.forEach(c => {
-                    const text = row[c.key] || '';
-                    wrapped[c.key] = pdf.splitTextToSize(text, c.w - 2);
+                    wrapped[c.key] = pdf.splitTextToSize(row[c.key] || '', c.w - 2);
                     const h = wrapped[c.key].length * 6;
                     if (h > rowHeight) rowHeight = h;
                 });
 
-                // Page break if needed for the row
                 ensureSpace(rowHeight);
-
-                // Draw line **above the text**
                 const fillColor = this._hexToRgb(this.options.pdf.fillColor);
                 pdf.setDrawColor(fillColor.r, fillColor.g, fillColor.b);
                 pdf.setLineWidth(0.15);
-                pdf.line(margin, y, margin + innerW, y); // draw at current y before text
+                pdf.line(margin, y, margin + innerW, y);
 
-                // Draw row text
-                col.forEach(c => {
-                    pdf.text(wrapped[c.key], c.x, y + 4);
-                });
-
+                col.forEach(c => pdf.text(wrapped[c.key], c.x, y + 4));
                 y += rowHeight;
             });
-
-            // small gap after a day's events
             y += 4;
         });
-
-        // Draw footer for the final schedule page
         drawFooter();
 
-        const drawClosing = async () => {
-            let y = margin;
-            const title = this.options.pdf.closing.title || 'Closing Title';
-            const message = this.options.pdf.closing.message || 'Closing Message';
+        // ---------------- CLOSING PAGE ----------------
+        pdf.addPage('a4', 'portrait');
+        updateDimensions();
+        addBookmark('Closing Remarks');
+        drawBackground();
+        drawOverlay();
 
-            drawBackground();
-            drawOverlay();
-
-            if (title) {
-                pdf.setFontSize(28);
-                pdf.setFont('helvetica', 'bold');
-                pdf.text(title, pageW / 2, y, { align: 'center' });
-                y += 20;
-            }
-
-            pdf.setFontSize(14);
-            pdf.setFont('helvetica', 'normal');
-            const lines = pdf.splitTextToSize(message, pageW - margin * 2);
-            pdf.text(lines, margin, y);
-
-            drawFooter();
+        let cy = margin + 10;
+        if (this.options.pdf.closing.title) {
+            pdf.setFontSize(28);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text(this.options.pdf.closing.title, pageW / 2, cy, { align: 'center' });
+            cy += 20;
         }
 
-        pdf.addPage();
-        addBookmark('Closing Remarks'); // parent=null, title, page number
+        pdf.setFontSize(14);
+        pdf.setFont('helvetica', 'normal');
+        const cLines = pdf.splitTextToSize(this.options.pdf.closing.message || '', pageW - margin * 2);
+        pdf.text(cLines, margin, cy);
+        drawFooter();
 
-        await drawClosing();
+        // ---------------- COMMITTEE & SPONSORS ----------------
+        const drawGridAlignedItems = async (items, title, message, cols, rowsPerPage, isSponsor) => {
+            drawHeader(title);
+            let gy = margin + 15;
 
-        const drawCommittee = async () => {
-            const colGap = this.options.pdf.committee.colGap || 10;
+            pdf.setFontSize(12);
+            pdf.setFont('helvetica', 'italic');
+            const msgLines = pdf.splitTextToSize(message || '', innerW);
+            pdf.text(msgLines, margin, gy);
+            gy += msgLines.length * 6 + 10;
 
-            // Automatically choose 2 or 3 columns unless user forces it
-            const columns = this.options.pdf.committee.columns || (pageW > pageH ? 3 : 2);
+            const colW = innerW / cols;
+            const availableH = pageH - gy - 20;
+            const cardH = availableH / rowsPerPage;
 
-            const colW = (pageW - margin * 2 - (columns - 1) * colGap) / columns;
-            const cardH = this.options.pdf.committee.cardHeight || 55;     // Height per entry
+            let colIdx = 0;
+            let rowIdx = 0;
 
-            const title = this.options.pdf.committee.title || 'Committee';
-            const message = this.options.pdf.committee.message || 'Committee Message';
-
-            if (typeof drawHeader === 'function') drawHeader(title);  // Assuming drawHeader is globally available
-
-            let x = margin;
-            let y = margin + 4;
-
-            pdf.setFontSize(14);
-            pdf.setFont('helvetica', 'normal');
-            const lines = pdf.splitTextToSize(message, pageW - margin * 2);
-            const dims = pdf.getTextDimensions("Hello world");
-            pdf.text(lines, margin, y);
-            y += dims.h * lines.length;
-
-            for (const member of this.options.pdf.committee.list) {
-
-                // New page if needed
-                if (y + cardH > pageH - margin) {
-                    pdf.addPage();
-                    y = margin;
+            for (const item of items) {
+                if (rowIdx >= rowsPerPage) {
+                    drawFooter();
+                    pdf.addPage('a4', 'portrait');
+                    drawHeader(title);
+                    gy = margin + 15;
+                    colIdx = 0;
+                    rowIdx = 0;
                 }
 
-                // Text positions
-                const tx = x;
-                let ty = y + 4;
+                const tx = margin + colIdx * colW;
+                let ty = gy + rowIdx * cardH;
+
+                if (isSponsor && item.image_url) {
+                    try {
+                        const imgData = await this._loadImageAsBase64(item.image_url);
+                        const dims = await getImageDimensions(imgData);
+                        const maxW = colW - 10, maxH = 25;
+                        const ratio = Math.min(maxW / dims.width, maxH / dims.height);
+                        const fw = dims.width * ratio;
+                        const fh = dims.height * ratio;
+                        pdf.addImage(imgData, 'PNG', tx, ty, fw, fh);
+                        ty += fh + 5;
+                    } catch (e) { }
+                }
 
                 pdf.setFontSize(12);
                 pdf.setFont('Helvetica', 'bold');
-                //console.info(member.name + ', ' + tx + ', ' + ty)
-                pdf.text(member.name, tx, ty);
-
-                ty += 5;
-                pdf.setFont('Helvetica', 'normal');
-                pdf.text(member.role, tx, ty);
-
-                ty += 5;
-                pdf.text(member.affiliation, tx, ty);
-
-                if (member.location) {
+                if (!isSponsor) {
+                    pdf.text(item.name || '', tx, ty);
                     ty += 5;
-                    pdf.text(member.location, tx, ty);
                 }
 
-                // if (member.email) {
-                //     ty += 5;
-                //     pdf.setFontSize(9);
-                //     pdf.text(member.email, tx, ty);
-                // }
-
-                // Next column
-                x += colW + colGap;
-
-                // If end of row, reset x and move y down
-                if (x + colW > pageW - margin) {
-                    x = margin;
-                    y += cardH + 8;
-                    //console.error(`passed height, recalculating to... ${x}, ${y}`)
-                }
-            }
-            drawFooter();
-        }
-
-        pdf.addPage();
-        addBookmark('Committee'); // parent=null, title, page number
-        await drawCommittee();
-
-        const drawSponsors = async () => {
-            const colGap = this.options.pdf.sponsors.colGap || 10;
-
-            // Auto choose columns unless user forces it
-            const columns = this.options.pdf.sponsors.columns || (pageW > pageH ? 3 : 2);
-
-            const colW = (pageW - margin * 2 - (columns - 1) * colGap) / columns;
-
-            // Height per card, taller than committee because of logos
-            const cardH = this.options.pdf.sponsors.cardHeight || 70;
-
-            const title = this.options.pdf.sponsors.title || "Sponsors";
-            const message = this.options.pdf.sponsors.message || 'Closing Message';
-
-            if (typeof drawHeader === "function") {
-                drawHeader(title);
-            }
-
-            let x = margin;
-            let y = margin + 4;
-
-            pdf.setFontSize(14);
-            pdf.setFont('helvetica', 'normal');
-            const lines = pdf.splitTextToSize(message, pageW - margin * 2);
-            const dims = pdf.getTextDimensions("Hello world");
-            pdf.text(lines, margin, y);
-            y += dims.h * lines.length;
-
-            for (const sponsor of this.options.pdf.sponsors.list) {
-                if (sponsor.level) {// Start a new page if card wont fit
-                    if (y + cardH > pageH - margin) {
-                        pdf.addPage();
-                        y = margin;
-                    }
-
-                    // Draw sponsor logo if available
-                    let maxImgW = 40; // maximum width
-                    let maxImgH = 20; // maximum height
-                    let imgH = 20;
-                    let imgW = 40;
-                    let imgX = x;
-                    let imgY = y;
-
-                    if (sponsor.image_url) {
-                        try {
-                            const imgData = await this._loadImageAsBase64(sponsor.image_url);
-
-                            // Create an Image object to get original dimensions
-                            const img = new Image();
-                            img.src = imgData;
-
-                            await new Promise((resolve, reject) => {
-                                img.onload = resolve;
-                                img.onerror = reject;
-                            });
-
-                            // Calculate aspect ratio
-                            const ratio = Math.min(maxImgW / img.width, maxImgH / img.height);
-                            const imgW = img.width * ratio;
-                            const imgH = img.height * ratio;
-
-                            pdf.addImage({
-                                imageData: imgData,
-                                format: "PNG",
-                                x: imgX,
-                                y: imgY,
-                                width: imgW,
-                                height: imgH
-                            });
-
-                        } catch (err) {
-                            console.warn("Failed to load sponsor logo", sponsor.image_url, err);
-                        }
-                    }
-
-
-                    // Text content
-                    let tx = x;
-                    let ty = y + imgH + 5;
-
-                    pdf.setFontSize(12);
-                    pdf.setFont("Helvetica", "bold");
-                    pdf.text(sponsor.name, tx, ty);
-
-                    pdf.setFont("Helvetica", "normal");
-                    pdf.setFontSize(10);
-
-                    if (sponsor.level) {
-                        ty += 5;
-                        pdf.text(`${sponsor.level} sponsor`, tx, ty);
-                    }
-
-                    // if (sponsor.type) {
-                    //     ty += 5;
-                    //     pdf.text(`Type: ${sponsor.type}`, tx, ty);
-                    // }
-
-                    if (sponsor.website) {
-                        ty += 5;
-                        pdf.setFontSize(9);
-
-                        // Draw the clickable link
-                        pdf.textWithLink(sponsor.website, tx, ty, { url: sponsor.website });
-
-                        // Draw underline
-                        const textWidth = pdf.getTextWidth(sponsor.website);
-                        const lineY = ty + 1; // a little below the text
-                        pdf.setLineWidth(0.2);
-                        pdf.line(tx, lineY, tx + textWidth, lineY);
-                    }
-
-
-                    // Move to next column
-                    x += colW + colGap;
-
-                    // If next card would overflow row width, wrap to next row
-                    if (x + colW > pageW - margin) {
-                        x = margin;
-                        y += cardH + 8;
+                pdf.setFont('Helvetica', 'normal');
+                pdf.setFontSize(10);
+                if (!isSponsor) {
+                    pdf.text(item.role || '', tx, ty); ty += 5;
+                    pdf.text(item.affiliation || '', tx, ty); ty += 5;
+                    if (item.location) pdf.text(item.location, tx, ty);
+                } else {
+                    if (item.level) { pdf.text(`${item.level} sponsor`, tx, ty); ty += 5; }
+                    if (item.website) {
+                        pdf.setTextColor(0, 0, 255);
+                        pdf.textWithLink(item.website, tx, ty, { url: item.website });
+                        pdf.setTextColor(0, 0, 0);
                     }
                 }
-            }
 
+                colIdx++;
+                if (colIdx >= cols) {
+                    colIdx = 0;
+                    rowIdx++;
+                }
+            }
             drawFooter();
         };
 
-        pdf.addPage();
-        addBookmark('Sponsors'); // parent=null, title, page number
-        await drawSponsors();
+        pdf.addPage('a4', 'portrait');
+        updateDimensions();
+        addBookmark('Committee');
+        await drawGridAlignedItems(
+            this.options.pdf.committee.list,
+            this.options.pdf.committee.title || 'Committee',
+            this.options.pdf.committee.message,
+            this.options.pdf.committee.columns || 3,
+            8,
+            false
+        );
+
+        pdf.addPage('a4', 'portrait');
+        updateDimensions();
+        addBookmark('Sponsors');
+        await drawGridAlignedItems(
+            this.options.pdf.sponsors.list.filter(s => s.level),
+            this.options.pdf.sponsors.title || 'Sponsors',
+            this.options.pdf.sponsors.message,
+            this.options.pdf.sponsors.columns || 2,
+            4,
+            true
+        );
 
         this.isGeneratingPdf = false;
         this.updatePdfButtonState();
-        pdf.save((this.options?.pdf?.programFilename ?? 'Conference_Program.pdf') + '.pdf');
+        pdf.save((this.options?.pdf?.programFilename ?? 'Conference_Program') + '.pdf');
     }
 
 
-
     async _loadImageAsBase64(url) {
-        const res = await fetch(url);
+        let res;
+        try {
+            res = await fetch(url);
+            // If the response is not 2xx (e.g., 404 Not Found), fallback to placeholder
+            if (!res.ok) {
+                console.warn(`Image failed to load (Status: ${res.status}) for URL: ${url}. Using placeholder.`);
+                res = await fetch('https://placehold.co/150x150/png?text=No+Image');
+            }
+        } catch (error) {
+            // If fetch throws a network error (e.g., CORS or invalid domain), fallback to placeholder
+            console.warn(`Network error fetching image: ${url}. Using placeholder.`, error);
+            res = await fetch('https://placehold.co/150x150/png?text=No+Image');
+        }
+
         const blob = await res.blob();
         return new Promise(resolve => {
             const reader = new FileReader();
