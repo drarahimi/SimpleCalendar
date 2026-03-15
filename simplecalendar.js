@@ -2486,16 +2486,15 @@ l-293 293 -5 551 -5 551 -24 19 c-30 24 -72 24 -102 0z"/>
             drawBackground();
             drawOverlay();
 
-            // Set text color explicitly back to Black
             pdf.setTextColor(0, 0, 0);
-
             pdf.setFontSize(28);
             pdf.setFont('helvetica', 'bold');
             pdf.text(this.options.pdf.welcome.title || 'Welcome', margin, wy);
             wy += 15;
 
             let imgW = 0;
-            let textRightMargin = margin;
+            let imgH = 0;
+            let imgY = wy;
 
             if (this.options.pdf.welcome.imageUrl) {
                 try {
@@ -2506,18 +2505,102 @@ l-293 293 -5 551 -5 551 -24 19 c-30 24 -72 24 -102 0z"/>
                     const maxImgH = 75;
                     const ratio = Math.min(maxImgW / dims.width, maxImgH / dims.height);
                     imgW = dims.width * ratio;
-                    const imgH = dims.height * ratio;
+                    imgH = dims.height * ratio;
 
                     const imgX = pageW - margin - imgW;
                     pdf.addImage(chairImgData, 'PNG', imgX, wy, imgW, imgH);
-                    textRightMargin = margin + imgW + 15;
-                } catch (e) { console.error(e.message) }
+
+                } catch (e) {
+                    console.error(e.message);
+                    imgW = 0;
+                    imgH = 0;
+                }
             }
 
             pdf.setFontSize(11);
             pdf.setFont('helvetica', 'normal');
-            const lines = pdf.splitTextToSize(this.options.pdf.welcome.message || '', pageW - margin - textRightMargin);
-            pdf.text(lines, margin, wy);
+
+            // --- SPACING CONFIGURATION ---
+            const lineSpacing = 5;       // Space between lines
+            const paragraphSpacing = 4;  // Extra space between paragraphs
+            const fullMaxWidth = pageW - (margin * 2);
+            const imagePadding = 15;
+            const defaultSpaceWidth = pdf.getTextWidth(' ');
+
+            const message = this.options.pdf.welcome.message || '';
+
+            // 1. Split text into paragraphs based on newline characters
+            const paragraphs = message.split(/\r?\n/);
+
+            for (let p = 0; p < paragraphs.length; p++) {
+                // 2. Split each paragraph into words, ignoring empty spaces
+                const words = paragraphs[p].split(/\s+/).filter(w => w.length > 0);
+
+                // Handle empty lines (e.g., user hit Enter twice)
+                if (words.length === 0) {
+                    wy += lineSpacing;
+                    continue;
+                }
+
+                let currentLineWords = [];
+                let currentLineWidth = 0;
+
+                for (let i = 0; i < words.length; i++) {
+                    const word = words[i];
+                    const wordWidth = pdf.getTextWidth(word);
+
+                    const isAlongsideImage = wy < (imgY + imgH)*1.1;
+                    const currentMaxWidth = isAlongsideImage
+                        ? (fullMaxWidth - imgW - imagePadding)
+                        : fullMaxWidth;
+
+                    // Calculate width if we add this word (existing words + new space + new word)
+                    const testWidth = currentLineWords.length === 0
+                        ? wordWidth
+                        : currentLineWidth + defaultSpaceWidth + wordWidth;
+
+                    if (testWidth > currentMaxWidth && currentLineWords.length > 0) {
+                        // --- LINE IS FULL: JUSTIFY AND PRINT ---
+                        if (currentLineWords.length === 1) {
+                            // Only one word fits, just print it normally
+                            pdf.text(currentLineWords[0], margin, wy);
+                        } else {
+                            // Calculate total width of characters only (no spaces)
+                            let totalWordsWidth = 0;
+                            currentLineWords.forEach(w => totalWordsWidth += pdf.getTextWidth(w));
+
+                            // Distribute the remaining empty space evenly between the words
+                            const dynamicSpaceWidth = (currentMaxWidth - totalWordsWidth) / (currentLineWords.length - 1);
+
+                            let currentX = margin;
+                            for (let j = 0; j < currentLineWords.length; j++) {
+                                pdf.text(currentLineWords[j], currentX, wy);
+                                currentX += pdf.getTextWidth(currentLineWords[j]) + dynamicSpaceWidth;
+                            }
+                        }
+
+                        wy += lineSpacing;
+
+                        // Start a new line with the word that triggered the wrap
+                        currentLineWords = [word];
+                        currentLineWidth = wordWidth;
+                    } else {
+                        // Word fits, add it to the current line array
+                        currentLineWords.push(word);
+                        currentLineWidth = testWidth;
+                    }
+                }
+
+                // --- PRINT LAST LINE OF PARAGRAPH ---
+                // The last line of a paragraph is never justified in professional documents
+                if (currentLineWords.length > 0) {
+                    pdf.text(currentLineWords.join(' '), margin, wy);
+                    wy += lineSpacing;
+                }
+
+                // Add extra space at the end of the paragraph
+                wy += paragraphSpacing;
+            }
 
             drawFooter();
         };
@@ -2718,7 +2801,7 @@ l-293 293 -5 551 -5 551 -24 19 c-30 24 -72 24 -102 0z"/>
             let gy = margin + 15;
 
             pdf.setFontSize(12);
-            pdf.setFont('helvetica', 'italic');
+            pdf.setFont('helvetica', 'normal');
             const msgLines = pdf.splitTextToSize(message || '', innerW);
             pdf.text(msgLines, margin, gy);
             gy += msgLines.length * 6 + 10;
