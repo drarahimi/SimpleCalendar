@@ -2386,8 +2386,8 @@ l-293 293 -5 551 -5 551 -24 19 c-30 24 -72 24 -102 0z"/>
 
             // 4. Thick Diagonal Accent Line
             pdf.setDrawColor(...themeColor);
-            pdf.setLineWidth(4);
-            pdf.line(pageW, 40, 50, pageH);
+            pdf.setLineWidth(6);
+            pdf.line(pageW+5, 35, 45, pageH+5); // x1, y1, x2, y2
 
             // 5. Theme-Colored Banner
             const bannerY = 60;
@@ -2397,7 +2397,7 @@ l-293 293 -5 551 -5 551 -24 19 c-30 24 -72 24 -102 0z"/>
 
             pdf.setFillColor(...themeColor);
             // Draw main rect then right triangle to form perfect slant
-            pdf.rect(0, bannerY, bannerBotRightX, bannerH, 'F');
+            pdf.rect(0, bannerY, bannerBotRightX+1, bannerH, 'F');
             pdf.triangle(bannerBotRightX, bannerY, bannerTopRightX, bannerY, bannerBotRightX, bannerY + bannerH, 'F');
 
             // 6. Bottom Right Corner Accent Triangles
